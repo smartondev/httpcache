@@ -4,8 +4,8 @@ namespace SmartonDev\HttpCache;
 
 class ModifiedMatcher
 {
-    private const IF_MODIFIED_SINCE_HEADER = 'If-Modified-Since';
-    private const IF_UNMODIFIED_SINCE_HEADER = 'If-Unmodified-Since';
+    private const IF_MODIFIED_SINCE_HEADER = 'if-modified-since';
+    private const IF_UNMODIFIED_SINCE_HEADER = 'if-unmodified-since';
 
     private array $headers = [];
 

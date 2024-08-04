@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartonDev\HttpCache\Tests2;
+namespace SmartonDev\HttpCache\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -11,17 +11,17 @@ class CacheHeaderBuilderTest extends TestCase
 {
     public function testNoCache(): void
     {
+        $noCacheExpectedHeaders = [
+            'Cache-Control' => 'must-revalidate, no-store, private, no-cache',
+            'Pragma' => 'no-cache',
+        ];
         $builder = (new CacheHeaderBuilder())
             ->withNoCache();
-        $this->assertSame(['Cache-Control' => 'no-cache'], $builder->toHeaders());
-        $builder = $builder->withNoStore();
-        $this->assertNotEquals(['Cache-Control' => 'no-cache'], $builder->toHeaders());
+        $this->assertSame($noCacheExpectedHeaders, $builder->toHeaders());
+        $builder = $builder->withSharedMaxAge(10);
+        $this->assertNotEquals($noCacheExpectedHeaders, $builder->toHeaders());
         $this->assertFalse(strpos($builder->toHeaders()['Cache-Control'], 'no-cache'));
-        $this->assertSame(
-            ['Cache-Control' => 'no-cache'],
-            $builder->withNoCache()
-                ->toHeaders()
-        );
+        $this->assertSame($noCacheExpectedHeaders, $builder->withNoCache()->toHeaders());
     }
 
     public function testMaxAgeWithDurations(): void
@@ -55,7 +55,7 @@ class CacheHeaderBuilderTest extends TestCase
         $builder = (new CacheHeaderBuilder())
             ->withMaxAge(3600)
             ->withNoStore();
-        $this->assertSame(['Cache-Control' => 'max-age=3600, no-store'], $builder->toHeaders());
+        $this->assertSame(['Cache-Control' => 'no-store, max-age=3600'], $builder->toHeaders());
     }
 
     public function testMaxAgeWithAge(): void

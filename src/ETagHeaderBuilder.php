@@ -2,9 +2,9 @@
 
 namespace SmartonDev\HttpCache;
 
-class ETagHeaderBuilder
+class ETagHeaderBuilder implements HttpHeaderInterface
 {
-    private const ETAG_HEADER = 'ETag';
+    public const ETAG_HEADER = 'etag';
 
     private mixed $etag = null;
 
@@ -32,7 +32,7 @@ class ETagHeaderBuilder
 
     public function toHeaders(): array
     {
-        if ($this->etag === null) {
+        if ($this->isEmpty()) {
             return [];
         }
         return [
@@ -42,7 +42,7 @@ class ETagHeaderBuilder
 
     public function getETagHeaderValue(): ?string
     {
-        if (null === $this->etag) {
+        if ($this->isEmpty()) {
             return null;
         }
         $etag = sprintf('"%s"', $this->etag);
@@ -50,5 +50,20 @@ class ETagHeaderBuilder
             return $etag;
         }
         return sprintf('W/%s', $etag);
+    }
+
+    public function isEmpty(): bool
+    {
+        return null === $this->etag;
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getETagHeaderValue() ?? '';
     }
 }

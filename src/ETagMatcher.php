@@ -4,8 +4,8 @@ namespace SmartonDev\HttpCache;
 
 class ETagMatcher
 {
-    private const IF_MATCH_HEADER = 'If-Match';
-    private const IF_NONE_MATCH_HEADER = 'If-None-Match';
+    private const IF_MATCH_HEADER = 'if-match';
+    private const IF_NONE_MATCH_HEADER = 'if-none-match';
 
     private array $headers = [];
 
