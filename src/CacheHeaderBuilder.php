@@ -539,7 +539,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
     {
         $this->resetIfNoCache();
         if ($etag instanceof ETagHeaderBuilder) {
-            $etag = $etag->getETagHeaderValue();
+            $etag = $etag->getETag();
         }
         $this->etag = $etag;
         return $this;
@@ -663,5 +663,10 @@ class CacheHeaderBuilder implements HttpHeaderInterface
     public function hasEtag(): bool
     {
         return null !== $this->etag;
+    }
+
+    public function getEtag(): ?string
+    {
+        return $this->etag;
     }
 }
