@@ -78,8 +78,8 @@ class ETagMatcherTest extends TestCase
     {
         $ETagHeaderBuilder = (new ETagHeaderBuilder())
             ->withETag('123456')
-            ->withIsWeekEtag();
-        $etag = $ETagHeaderBuilder->getETagHeaderValue();
+            ->withWeekEtag();
+        $etag = $ETagHeaderBuilder->getETag();
         $ETagCondition = new ETagMatcher();
         $this->assertTrue(
             $ETagCondition
