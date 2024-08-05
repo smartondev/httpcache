@@ -24,7 +24,7 @@ class ETagHeaderBuilderTest extends TestCase
         $this->assertSame(
             $expectedWeekHeaders,
             $builder
-                ->withIsWeekEtag()
+                ->withWeekEtag()
                 ->toHeaders()
         );
         $this->assertSame($expectedHeaders, $builder->toHeaders());
@@ -48,9 +48,9 @@ class ETagHeaderBuilderTest extends TestCase
     public function testWithComputedEtag(mixed $data, callable $func, bool $weekEtag, array $expectedHeaders): void
     {
         $builder = (new ETagHeaderBuilder())
-            ->withComputedEtag($data, $func);
+            ->computedETag($data, $func);
         if ($weekEtag) {
-            $builder = $builder->withIsWeekEtag();
+            $builder->weekETag();
         }
         $this->assertSame($expectedHeaders, $builder->toHeaders());
     }
