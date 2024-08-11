@@ -9,25 +9,48 @@ class ModifiedMatcher
 
     private array $headers = [];
 
+    public function headers(array $headers): static
+    {
+        $this->headers = replaceHeaders([], $headers);
+        return $this;
+    }
+
     public function withHeaders(array $headers): static
     {
-        $clone = clone $this;
-        $clone->headers = $headers;
-        return $clone;
+        return (clone $this)->headers($headers);
+    }
+
+    public function resetHeaders(): static
+    {
+        $this->headers = [];
+        return $this;
+    }
+
+    public function withoutHeaders(): static
+    {
+        return (clone $this)->resetHeaders();
+    }
+
+    public function ifModifiedSinceHeader(string|array $ifModifiedSince): static
+    {
+        $this->headers = replaceHeaders($this->headers, [self::IF_MODIFIED_SINCE_HEADER, $ifModifiedSince]);
+        return $this;
     }
 
     public function withIfModifiedSinceHeader(string|array $ifModifiedSince): static
     {
-        $clone = clone $this;
-        $clone->headers = [self::IF_MODIFIED_SINCE_HEADER, $ifModifiedSince];
-        return $clone;
+        return (clone $this)->ifModifiedSinceHeader($ifModifiedSince);
+    }
+
+    public function ifUnmodifiedSinceHeader(string|array $ifUnmodifiedSince): static
+    {
+        $this->headers = replaceHeaders($this->headers, [self::IF_UNMODIFIED_SINCE_HEADER, $ifUnmodifiedSince]);
+        return $this;
     }
 
     public function withIfUnmodifiedSinceHeader(string|array $ifUnmodifiedSince): static
     {
-        $clone = clone $this;
-        $clone->headers = [self::IF_UNMODIFIED_SINCE_HEADER, $ifUnmodifiedSince];
-        return $clone;
+        return (clone $this)->ifUnmodifiedSinceHeader($ifUnmodifiedSince);
     }
 
     public function getIfModifiedSinceHeader(): ?string

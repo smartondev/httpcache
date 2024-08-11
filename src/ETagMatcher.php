@@ -11,7 +11,7 @@ class ETagMatcher
 
     public function headers(array $headers): static
     {
-        $this->headers = $headers;
+        $this->headers = replaceHeaders([], $headers);
         return $this;
     }
 
@@ -22,8 +22,13 @@ class ETagMatcher
 
     public function ifMatchHeader(string|array $ifMatch): static
     {
-        return (clone $this)
-            ->headers([self::IF_MATCH_HEADER, $ifMatch]);
+        $this->headers = replaceHeaders($this->headers, [self::IF_MATCH_HEADER, $ifMatch]);
+        return $this;
+    }
+
+    public function withIfMatchHeader(string|array $ifMatch): static
+    {
+        return (clone $this)->ifMatchHeader($ifMatch);
     }
 
     public function resetHeaders(): static
@@ -39,8 +44,8 @@ class ETagMatcher
 
     public function ifNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
-        return (clone $this)
-            ->headers([self::IF_NONE_MATCH_HEADER, $ifNoneMatch]);
+        $this->headers = replaceHeaders($this->headers, [self::IF_NONE_MATCH_HEADER, $ifNoneMatch]);
+        return $this;
     }
 
     public function withIfNoneMatchHeaderValue(string|array $ifNoneMatch): static

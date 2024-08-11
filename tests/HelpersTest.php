@@ -8,6 +8,7 @@ use function SmartonDev\HttpCache\durationToSeconds;
 use function SmartonDev\HttpCache\getHeaderFirstValue;
 use function SmartonDev\HttpCache\httpHeaderDate;
 use function SmartonDev\HttpCache\isValidHttpHeaderDate;
+use function SmartonDev\HttpCache\replaceHeaders;
 
 class HelpersTest extends TestCase
 {
@@ -73,6 +74,38 @@ class HelpersTest extends TestCase
     public function testIsValidHttpHeaderDate(string $value, bool $expected): void
     {
         $this->assertSame($expected, isValidHttpHeaderDate($value));
+    }
+
+    public static function dataProviderReplaceHeaders(): array
+    {
+        return [
+            'emptyInput replace' => [
+                [],
+                ['content-type' => 'application/json'],
+                ['content-type' => 'application/json'],
+            ],
+            'emptyInput, replace uppercase' => [
+                [],
+                ['Content-Type' => 'application/json'],
+                ['content-type' => 'application/json'],
+            ],
+            'uppercase input, replace lowercase' => [
+                ['Content-Type' => 'text/plain'],
+                ['content-type' => 'application/json'],
+                ['content-type' => 'application/json'],
+            ],
+            'uppercase input with more, replace lowercase' => [
+                ['Content-Type' => 'text/plain', 'x-no-change' => '1234'],
+                ['content-type' => 'application/json'],
+                ['content-type' => 'application/json', 'x-no-change' => '1234'],
+            ],
+        ];
+    }
+
+    #[DataProvider('dataProviderReplaceHeaders')]
+    public function testReplaceHeaders(array $headers, array $replaceHeaders, array $expectedHeaders): void
+    {
+        $this->assertSame($expectedHeaders, replaceHeaders($headers, $replaceHeaders));
     }
 
 }

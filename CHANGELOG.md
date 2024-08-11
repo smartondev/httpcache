@@ -8,7 +8,8 @@
 - enh: more tests added
 - enh: cache control tags sorted by name
 - enh: lowercased header names
-- fix: CacheHeaderBuilder::reset() staleWhileRevalidate and staleIfError 
+- fix: CacheHeaderBuilder::reset() staleWhileRevalidate and staleIfError
+- enh: header always converted to lowercase
 
 ## 0.1.0
 

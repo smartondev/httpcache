@@ -11,7 +11,7 @@ class ETagMatcherTest extends TestCase
     public function testIsMatch(): void
     {
         $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-Match' => '"123456"']);
+            ->headers(['If-Match' => '"123456"']);
         $this->assertTrue(
             $ETagCondition
                 ->matches('"123456"')

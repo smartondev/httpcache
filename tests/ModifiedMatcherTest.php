@@ -22,8 +22,7 @@ class ModifiedMatcherTest extends TestCase
     #[DataProvider('dataProviderHeaderExists')]
     public function testHeaderExists(array $headers, bool $expectedExistsIfModifiedSince, bool $expectedExistsIfUnmodifiedSince): void
     {
-        $matcher = (new ModifiedMatcher())
-            ->withHeaders($headers);
+        $matcher = (new ModifiedMatcher())->headers($headers);
 
         $this->assertSame($expectedExistsIfModifiedSince, $matcher->hasIfModifiedSinceHeader());
         $this->assertSame($expectedExistsIfUnmodifiedSince, $matcher->hasIfUnmodifiedSinceHeader());
@@ -43,8 +42,7 @@ class ModifiedMatcherTest extends TestCase
     #[DataProvider('dataProviderHeaderIsValid')]
     public function testHeaderIsValid(array $headers, bool $expectedIfModifiedSince, bool $expectedIfUnmodifiedSince): void
     {
-        $matcher = (new ModifiedMatcher())
-            ->withHeaders($headers);
+        $matcher = (new ModifiedMatcher())->headers($headers);
 
         $this->assertSame($expectedIfModifiedSince, $matcher->isValidIfModifiedSinceHeader());
         $this->assertSame(!$expectedIfModifiedSince, $matcher->isInvalidIfModifiedSinceHeader());
@@ -66,19 +64,17 @@ class ModifiedMatcherTest extends TestCase
                                           ?int  $expectedIfModifiedSinceAsTimestamp,
                                           ?int  $expectedIfUnmodifiedSinceAsTimestamp): void
     {
-        $matcher = (new ModifiedMatcher())
-            ->withHeaders($headers);
+        $matcher = (new ModifiedMatcher())->headers($headers);
         $this->assertSame($expectedIfModifiedSinceAsTimestamp, $matcher->getIfModifiedSinceHeaderAsTimestamp());
         $this->assertSame($expectedIfUnmodifiedSinceAsTimestamp, $matcher->getIfUnmodifiedSinceHeaderAsTimestamp());
     }
 
     public function testMatches(): void
     {
-        $matcher = (new ModifiedMatcher())
-            ->withHeaders([
-                'If-Modified-Since' => 'Tue, 15 Nov 1994 12:45:26 GMT',
-                'If-Unmodified-Since' => 'Tue, 15 Nov 1994 12:45:26 GMT',
-            ]);
+        $matcher = (new ModifiedMatcher())->headers([
+            'If-Modified-Since' => 'Tue, 15 Nov 1994 12:45:26 GMT',
+            'If-Unmodified-Since' => 'Tue, 15 Nov 1994 12:45:26 GMT',
+        ]);
 
         $dtBefore = new \DateTime('Mon, 14 Nov 1994 12:45:26 GMT');
         $dtAfter = new \DateTime('Wed, 16 Nov 1994 12:45:26 GMT');
