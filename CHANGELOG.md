@@ -8,6 +8,7 @@
 - enh: more tests added
 - enh: cache control tags sorted by name
 - enh: lowercased header names
+- fix: CacheHeaderBuilder::reset() staleWhileRevalidate and staleIfError 
 
 ## 0.1.0
 
