@@ -10,6 +10,7 @@
 - enh: lowercased header names
 - fix: CacheHeaderBuilder::reset() staleWhileRevalidate and staleIfError
 - enh: header always converted to lowercase
+- enh: CacheHeaderBuilder::hasLastModified(), hasEtag(), isNoCache(), isEmpty(), isNotEmpty(), getEtag()
 
 ## 0.1.0
 

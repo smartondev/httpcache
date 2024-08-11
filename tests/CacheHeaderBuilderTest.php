@@ -188,4 +188,34 @@ class CacheHeaderBuilderTest extends TestCase
         $headers = $builder->toHeaders();
         $this->assertSame(['etag' => '"123456"'], $headers);
     }
+
+    public function testHasLastModified(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $this->assertFalse($builder->hasLastModified());
+        $builder->lastModified(1);
+        $this->assertTrue($builder->hasLastModified());
+        $builder->resetLastModified();
+        $this->assertFalse($builder->hasLastModified());
+    }
+
+    public function testIsEmpty(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $this->assertTrue($builder->isEmpty());
+        $builder->noCache();
+        $this->assertFalse($builder->isEmpty());
+        $builder->reset();
+        $this->assertTrue($builder->isEmpty());
+    }
+
+    public function testIsNotEmpty(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $this->assertFalse($builder->isNotEmpty());
+        $builder->noCache();
+        $this->assertTrue($builder->isNotEmpty());
+        $builder->reset();
+        $this->assertFalse($builder->isNotEmpty());
+    }
 }

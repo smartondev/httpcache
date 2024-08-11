@@ -669,4 +669,9 @@ class CacheHeaderBuilder implements HttpHeaderInterface
     {
         return $this->etag;
     }
+
+    public function hasLastModified(): bool
+    {
+        return null !== $this->lastModified;
+    }
 }
