@@ -69,8 +69,8 @@ class CacheHeaderBuilder implements HttpHeaderInterface
         $this->mustUnderstand = false;
         $this->noTransform = false;
         $this->immutable = false;
-        $this->staleWhileRevalidate = false;
-        $this->staleIfError = false;
+        $this->staleWhileRevalidate = null;
+        $this->staleIfError = null;
         $this->age = null;
         $this->etag = null;
         $this->expires = null;
