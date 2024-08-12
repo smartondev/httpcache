@@ -43,7 +43,7 @@ if($etagMatcher->matches($etag)->matches()) {
 // modified since
 $modifiedMatcher = (new ModifiedMatcher())
     ->headers($requestHeaders);
-if($modifiedMatcher->matches($lastModified)->isBeforeModifiedSince()) {
+if($modifiedMatcher->matches($lastModified)->matchesModifiedAt()) {
     // 304 Not Modified
     return response(null, 304);
 }

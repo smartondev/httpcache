@@ -11,6 +11,8 @@
 - fix: CacheHeaderBuilder::reset() staleWhileRevalidate and staleIfError
 - enh: header always converted to lowercase
 - enh: CacheHeaderBuilder::hasLastModified(), hasEtag(), isNoCache(), isEmpty(), isNotEmpty(), getEtag()
+- remove: ModifiedMatcherResult:: isBeforeModifiedSince, isAfterModifiedSince, isBeforeModifiedAt, isAfterModifiedAt, isEqualsModifiedAt, isEqualsUnmodifiedSince
+- enh: ModifiedMatcherResult::isModifiedSince, matchesModifiedAt, isUnmodifiedSince
 
 ## 0.1.0
 

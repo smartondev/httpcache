@@ -11,33 +11,19 @@ readonly class ModifiedMatcherResult
     {
     }
 
-    public function isBeforeModifiedSince(): bool
+    public function isModifiedSince(): bool
     {
-        return $this->ifModifiedSince !== null && $this->baseDate < $this->ifModifiedSince;
+        return ($this->ifModifiedSince !== null && $this->baseDate > $this->ifModifiedSince)
+            || ($this->ifUnmodifiedSince !== null && $this->baseDate > $this->ifUnmodifiedSince);
     }
 
-    public function isAfterModifiedSince(): bool
-    {
-        return $this->ifModifiedSince !== null && $this->baseDate > $this->ifModifiedSince;
-    }
-
-    public function isEqualsModifiedSince(): bool
+    public function matchesModifiedAt(): bool
     {
         return $this->ifModifiedSince !== null && $this->baseDate === $this->ifModifiedSince;
     }
 
-    public function isBeforeUnmodifiedSince(): bool
+    public function isUnmodifiedSince(): bool
     {
-        return $this->ifUnmodifiedSince !== null && $this->baseDate < $this->ifUnmodifiedSince;
-    }
-
-    public function isAfterUnmodifiedSince(): bool
-    {
-        return $this->ifUnmodifiedSince !== null && $this->baseDate > $this->ifUnmodifiedSince;
-    }
-
-    public function isEqualsUnmodifiedSince(): bool
-    {
-        return $this->ifUnmodifiedSince !== null && $this->baseDate === $this->ifUnmodifiedSince;
+        return $this->ifUnmodifiedSince !== null && $this->baseDate <= $this->ifUnmodifiedSince;
     }
 }

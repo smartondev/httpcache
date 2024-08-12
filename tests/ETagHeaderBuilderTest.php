@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartonDev\HttpCache\Tests2;
+namespace SmartonDev\HttpCache\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
