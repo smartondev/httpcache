@@ -54,4 +54,15 @@ class ETagHeaderBuilderTest extends TestCase
         }
         $this->assertSame($expectedHeaders, $builder->toHeaders());
     }
+
+    public function testEmptyETag(): void
+    {
+        $builder = (new ETagHeaderBuilder())
+            ->etag('');
+        $this->assertNull($builder->getETag());
+
+        $builder = (new ETagHeaderBuilder())
+            ->etag('    ');
+        $this->assertNull($builder->getETag());
+    }
 }

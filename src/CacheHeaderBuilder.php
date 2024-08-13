@@ -535,16 +535,35 @@ class CacheHeaderBuilder implements HttpHeaderInterface
             ->resetStaleIfError();
     }
 
+    /**
+     * Set ETAG.
+     *
+     * If ETAG is empty, it will be reset.
+     *
+     * @param string|ETagHeaderBuilder $etag
+     * @return $this
+     */
     public function etag(string|ETagHeaderBuilder $etag): static
     {
         $this->resetIfNoCache();
         if ($etag instanceof ETagHeaderBuilder) {
             $etag = $etag->getETag();
         }
+        if (is_string($etag) && trim($etag) === '') {
+            $etag = null;
+        }
         $this->etag = $etag;
         return $this;
     }
 
+    /**
+     * New instance with ETAG.
+     *
+     * If ETAG is empty, it will be reset.
+     *
+     * @param string|ETagHeaderBuilder $etag
+     * @return $this
+     */
     public function withETag(string|ETagHeaderBuilder $etag): static
     {
         return (clone $this)
@@ -638,7 +657,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
             $headers[self::AGE_HEADER] = (string)$this->age;
         }
 
-        if ($this->hasEtag()) {
+        if ($this->hasETag()) {
             $headers[ETagHeaderBuilder::ETAG_HEADER] = $this->etag;
         }
 
@@ -660,12 +679,12 @@ class CacheHeaderBuilder implements HttpHeaderInterface
         return !$this->isEmpty();
     }
 
-    public function hasEtag(): bool
+    public function hasETag(): bool
     {
         return null !== $this->etag;
     }
 
-    public function getEtag(): ?string
+    public function getETag(): ?string
     {
         return $this->etag;
     }

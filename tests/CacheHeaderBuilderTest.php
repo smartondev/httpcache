@@ -189,6 +189,18 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertSame(['etag' => '"123456"'], $headers);
     }
 
+    public function testWithEmptyEtag() : void {
+        $builder = (new CacheHeaderBuilder())
+            ->withETag('');
+        $this->assertNull($builder->getETag());
+        $this->assertFalse($builder->hasETag());
+
+        $builder = (new CacheHeaderBuilder())
+            ->withETag('   ');
+        $this->assertNull($builder->getETag());
+        $this->assertFalse($builder->hasETag());
+    }
+
     public function testHasLastModified(): void
     {
         $builder = new CacheHeaderBuilder();
