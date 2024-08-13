@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartonDev\HttpCache\Tests2;
+namespace SmartonDev\HttpCache\Tests;
 
 use PHPUnit\Framework\TestCase;
 use SmartonDev\HttpCache\ETagMatcher;
@@ -11,7 +11,7 @@ class ETagMatcherTest extends TestCase
     public function testIsMatch(): void
     {
         $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-Match' => '"123456"']);
+            ->headers(['If-Match' => '"123456"']);
         $this->assertTrue(
             $ETagCondition
                 ->matches('"123456"')
@@ -78,8 +78,8 @@ class ETagMatcherTest extends TestCase
     {
         $ETagHeaderBuilder = (new ETagHeaderBuilder())
             ->withETag('123456')
-            ->withIsWeekEtag();
-        $etag = $ETagHeaderBuilder->getETagHeaderValue();
+            ->withWeekEtag();
+        $etag = $ETagHeaderBuilder->getETag();
         $ETagCondition = new ETagMatcher();
         $this->assertTrue(
             $ETagCondition

@@ -4,30 +4,53 @@ namespace SmartonDev\HttpCache;
 
 class ETagMatcher
 {
-    private const IF_MATCH_HEADER = 'If-Match';
-    private const IF_NONE_MATCH_HEADER = 'If-None-Match';
+    private const IF_MATCH_HEADER = 'if-match';
+    private const IF_NONE_MATCH_HEADER = 'if-none-match';
 
     private array $headers = [];
 
+    public function headers(array $headers): static
+    {
+        $this->headers = replaceHeaders([], $headers);
+        return $this;
+    }
+
     public function withHeaders(array $headers): static
     {
-        $clone = clone $this;
-        $clone->headers = $headers;
-        return $clone;
+        return (clone $this)->headers($headers);
+    }
+
+    public function ifMatchHeader(string|array $ifMatch): static
+    {
+        $this->headers = replaceHeaders($this->headers, [self::IF_MATCH_HEADER, $ifMatch]);
+        return $this;
     }
 
     public function withIfMatchHeader(string|array $ifMatch): static
     {
-        $clone = clone $this;
-        $clone->headers = [self::IF_MATCH_HEADER, $ifMatch];
-        return $clone;
+        return (clone $this)->ifMatchHeader($ifMatch);
     }
 
-    public function withIfNoneMatchHeader(string|array $ifNoneMatch): static
+    public function resetHeaders(): static
     {
-        $clone = clone $this;
-        $clone->headers = [self::IF_NONE_MATCH_HEADER, $ifNoneMatch];
-        return $clone;
+        $this->headers = [];
+        return $this;
+    }
+
+    public function withoutHeaders(): static
+    {
+        return (clone $this)->resetHeaders();
+    }
+
+    public function ifNoneMatchHeaderValue(string|array $ifNoneMatch): static
+    {
+        $this->headers = replaceHeaders($this->headers, [self::IF_NONE_MATCH_HEADER, $ifNoneMatch]);
+        return $this;
+    }
+
+    public function withIfNoneMatchHeaderValue(string|array $ifNoneMatch): static
+    {
+        return (clone $this)->ifNoneMatchHeaderValue($ifNoneMatch);
     }
 
     public function getIfNoneMatchHeader(): ?string

@@ -44,6 +44,18 @@ function getHeaderFirstValue(array $headers, string $name): ?string
     return null;
 }
 
+function replaceHeaders(array $headers, array $replaceHeaders): array
+{
+    $output = [];
+    foreach ($headers as $key => $value) {
+        $output[strtolower($key)] = $value;
+    }
+    foreach ($replaceHeaders as $key => $value) {
+        $output[strtolower($key)] = $value;
+    }
+    return $output;
+}
+
 function toTimestamp(int|string|\DateTime $input): int
 {
     if (is_int($input)) {

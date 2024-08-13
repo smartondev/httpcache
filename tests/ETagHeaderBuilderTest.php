@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartonDev\HttpCache\Tests2;
+namespace SmartonDev\HttpCache\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -11,8 +11,8 @@ class ETagHeaderBuilderTest extends TestCase
     public static function dataProviderWithEtag(): array
     {
         return [
-            ['123456', ['ETag' => '"123456"'], ['ETag' => 'W/"123456"']],
-            ['abcABC123456', ['ETag' => '"abcABC123456"'], ['ETag' => 'W/"abcABC123456"']],
+            ['123456', ['etag' => '"123456"'], ['etag' => 'W/"123456"']],
+            ['abcABC123456', ['etag' => '"abcABC123456"'], ['etag' => 'W/"abcABC123456"']],
         ];
     }
 
@@ -24,7 +24,7 @@ class ETagHeaderBuilderTest extends TestCase
         $this->assertSame(
             $expectedWeekHeaders,
             $builder
-                ->withIsWeekEtag()
+                ->withWeekEtag()
                 ->toHeaders()
         );
         $this->assertSame($expectedHeaders, $builder->toHeaders());
@@ -33,14 +33,14 @@ class ETagHeaderBuilderTest extends TestCase
     public static function dataProviderWithComputedEtag()
     {
         return [
-            ['content123', 'md5', false, ['ETag' => '"' . md5('content123') . '"']],
-            ['content456', 'md5', true, ['ETag' => 'W/"' . md5('content456') . '"']],
-            ['content789', 'sha1', false, ['ETag' => '"' . sha1('content789') . '"']],
-            ['contentABC', 'sha1', true, ['ETag' => 'W/"' . sha1('contentABC') . '"']],
-            ['contentABCDE', 'strval', false, ['ETag' => '"contentABCDE"']],
-            ['contentABCDEFG', 'strval', true, ['ETag' => 'W/"contentABCDEFG"']],
-            [2, fn($d) => $d * 11, false, ['ETag' => '"22"']],
-            [35, fn($d) => $d / 5, true, ['ETag' => 'W/"7"']],
+            ['content123', 'md5', false, ['etag' => '"' . md5('content123') . '"']],
+            ['content456', 'md5', true, ['etag' => 'W/"' . md5('content456') . '"']],
+            ['content789', 'sha1', false, ['etag' => '"' . sha1('content789') . '"']],
+            ['contentABC', 'sha1', true, ['etag' => 'W/"' . sha1('contentABC') . '"']],
+            ['contentABCDE', 'strval', false, ['etag' => '"contentABCDE"']],
+            ['contentABCDEFG', 'strval', true, ['etag' => 'W/"contentABCDEFG"']],
+            [2, fn($d) => $d * 11, false, ['etag' => '"22"']],
+            [35, fn($d) => $d / 5, true, ['etag' => 'W/"7"']],
         ];
     }
 
@@ -48,10 +48,21 @@ class ETagHeaderBuilderTest extends TestCase
     public function testWithComputedEtag(mixed $data, callable $func, bool $weekEtag, array $expectedHeaders): void
     {
         $builder = (new ETagHeaderBuilder())
-            ->withComputedEtag($data, $func);
+            ->computedETag($data, $func);
         if ($weekEtag) {
-            $builder = $builder->withIsWeekEtag();
+            $builder->weekETag();
         }
         $this->assertSame($expectedHeaders, $builder->toHeaders());
+    }
+
+    public function testEmptyETag(): void
+    {
+        $builder = (new ETagHeaderBuilder())
+            ->etag('');
+        $this->assertNull($builder->getETag());
+
+        $builder = (new ETagHeaderBuilder())
+            ->etag('    ');
+        $this->assertNull($builder->getETag());
     }
 }

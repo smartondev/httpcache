@@ -2,47 +2,84 @@
 
 namespace SmartonDev\HttpCache;
 
-class ETagHeaderBuilder
+class ETagHeaderBuilder implements HttpHeaderInterface
 {
-    private const ETAG_HEADER = 'ETag';
+    public const ETAG_HEADER = 'etag';
 
-    private mixed $etag = null;
+    private ?string $etag = null;
 
     private bool $weekETag = false;
 
-    public function withETag(mixed $etag, bool $isWeek = false): static
+    public function etag(null|string $etag, bool $isWeek = false): static
     {
-        $clone = clone $this;
-        $clone->etag = $etag;
-        return $clone->withIsWeekEtag($isWeek);
+        if (trim($etag) === '') {
+            $etag = null;
+        }
+        $this->etag = $etag;
+        return $this->weekETag($isWeek);
     }
 
-    public function withComputedEtag($data, callable $func): static
+    public function computedETag(mixed $data, callable $func, bool $week = false): static
     {
-        $etag = call_user_func($func, $data);
-        return $this->withETag($etag);
+        return $this->etag(call_user_func($func, $data), $week);
     }
 
-    public function withIsWeekEtag(bool $week = true): static
+    public function withComputedETag(mixed $data, callable $func, bool $week = false): static
     {
-        $clone = clone $this;
-        $clone->weekETag = $week;
-        return $clone;
+        return (clone $this)->computedETag($data, $func, $week);
+    }
+
+    public function withEtag(?string $etag): static
+    {
+        return (clone $this)->etag($etag);
+    }
+
+    public function resetETag(): static
+    {
+        $this->etag = null;
+        return $this;
+    }
+
+    public function withoutETag(): static
+    {
+        return (clone $this)->resetETag();
+    }
+
+    public function weekETag(bool $week = true): static
+    {
+        $this->weekETag = $week;
+        return $this;
+    }
+
+    public function withWeekETag(bool $week = true): static
+    {
+        return (clone $this)->weekETag($week);
+    }
+
+    public function resetETagWeek(): static
+    {
+        $this->weekETag = false;
+        return $this;
+    }
+
+    public function withoutWeekETag(): static
+    {
+        return (clone $this)->resetETagWeek();
     }
 
     public function toHeaders(): array
     {
-        if ($this->etag === null) {
+        if ($this->isEmpty()) {
             return [];
         }
         return [
-            self::ETAG_HEADER => $this->getETagHeaderValue()
+            self::ETAG_HEADER => $this->getETag(),
         ];
     }
 
-    public function getETagHeaderValue(): ?string
+    public function getETag(): ?string
     {
-        if (null === $this->etag) {
+        if ($this->isEmpty()) {
             return null;
         }
         $etag = sprintf('"%s"', $this->etag);
@@ -50,5 +87,20 @@ class ETagHeaderBuilder
             return $etag;
         }
         return sprintf('W/%s', $etag);
+    }
+
+    public function isEmpty(): bool
+    {
+        return null === $this->etag;
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getETag() ?? '';
     }
 }
