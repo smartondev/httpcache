@@ -2,6 +2,9 @@
 
 ## dev
 
+
+## 0.2.0
+
 - enh: mutable accessors
 - enh: no-cache with more control tags + pragma
 - fix: no-cache reset if not used
