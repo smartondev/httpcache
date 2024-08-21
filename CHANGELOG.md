@@ -2,6 +2,7 @@
 
 ## dev
 
+- fix: no-cache reset fix (private, public, noStore, mustRevalidate) #2
 
 ## 0.2.0
 

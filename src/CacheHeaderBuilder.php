@@ -43,10 +43,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
 
     public function noCache(): static
     {
-        $this->reset()
-            ->mustRevalidate()
-            ->private()
-            ->noStore();
+        $this->reset();
         $this->noCache = true;
         return $this;
     }
@@ -257,6 +254,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
 
     public function mustRevalidate(): static
     {
+        $this->resetIfNoCache();
         $this->mustRevalidate = true;
         return $this;
     }
@@ -300,6 +298,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
 
     public function noStore(): static
     {
+        $this->resetIfNoCache();
         $this->noStore = true;
         return $this;
     }
@@ -324,6 +323,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
 
     public function private(): static
     {
+        $this->resetIfNoCache();
         $this->private = true;
         $this->public = false;
         return $this;
@@ -349,6 +349,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
 
     public function public(): static
     {
+        $this->resetIfNoCache();
         $this->public = true;
         $this->private = false;
         return $this;
@@ -588,6 +589,19 @@ class CacheHeaderBuilder implements HttpHeaderInterface
         if (null !== $this->lastModified) {
             $headers[self::LAST_MODIFIED_HEADER] = httpHeaderDate($this->lastModified);
         }
+        if ($this->noCache) {
+            $cacheControl = [
+                'must-revalidate',
+                'no-store',
+                'private',
+                'no-cache',
+            ];
+            sort($cacheControl);
+            $headers[self::CACHE_CONTROL_HEADER] = join(', ', $cacheControl);
+            $headers[self::PRAGMA_HEADER] = 'no-cache';
+            return $headers;
+        }
+
         $cacheControl = [];
         if ($this->mustRevalidate) {
             $cacheControl[] = 'must-revalidate';
@@ -599,14 +613,6 @@ class CacheHeaderBuilder implements HttpHeaderInterface
 
         if ($this->private) {
             $cacheControl[] = 'private';
-        }
-
-        if ($this->noCache) {
-            $cacheControl[] = 'no-cache';
-            sort($cacheControl);
-            $headers[self::CACHE_CONTROL_HEADER] = join(', ', $cacheControl);
-            $headers[self::PRAGMA_HEADER] = 'no-cache';
-            return $headers;
         }
         // no-cache disables all other cache headers
 

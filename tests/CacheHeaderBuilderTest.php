@@ -189,7 +189,8 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertSame(['etag' => '"123456"'], $headers);
     }
 
-    public function testWithEmptyEtag() : void {
+    public function testWithEmptyEtag(): void
+    {
         $builder = (new CacheHeaderBuilder())
             ->withETag('');
         $this->assertNull($builder->getETag());
@@ -229,5 +230,16 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertTrue($builder->isNotEmpty());
         $builder->reset();
         $this->assertFalse($builder->isNotEmpty());
+    }
+
+    public function testNoCacheReset(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $builder->noCache();
+        $this->assertSame([], $builder->withReset()->toHeaders());
+        $this->assertSame(['cache-control' => 'private'], $builder->withPrivate()->toHeaders());
+        $this->assertSame(['cache-control' => 'public'], $builder->withPublic()->toHeaders());
+        $this->assertSame(['cache-control' => 'no-store'], $builder->withNoStore()->toHeaders());
+        $this->assertSame(['cache-control' => 'must-revalidate'], $builder->withMustRevalidate()->toHeaders());
     }
 }
