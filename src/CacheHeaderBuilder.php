@@ -71,6 +71,7 @@ class CacheHeaderBuilder implements HttpHeaderInterface
         $this->age = null;
         $this->etag = null;
         $this->expires = null;
+        $this->lastModified = null;
         return $this;
     }
 
