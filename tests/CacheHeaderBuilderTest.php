@@ -242,4 +242,52 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertSame(['cache-control' => 'no-store'], $builder->withNoStore()->toHeaders());
         $this->assertSame(['cache-control' => 'must-revalidate'], $builder->withMustRevalidate()->toHeaders());
     }
+
+    public function testIsNoCache(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $this->assertFalse($builder->isNoCache());
+        $builder->noCache();
+        $this->assertTrue($builder->isNoCache());
+        $builder->reset();
+        $this->assertFalse($builder->isNoCache());
+
+        $builder->noCache();
+        $builder->public();
+        $this->assertFalse($builder->isNoCache());
+    }
+
+    public static function dataProviderReset(): array
+    {
+        $builder = new CacheHeaderBuilder();
+        return [
+            'noCache' => [$builder->withNoCache()],
+            'private' => [$builder->withPrivate()],
+            'public' => [$builder->withPublic()],
+            'noStore' => [$builder->withNoStore()],
+            'mustRevalidate' => [$builder->withMustRevalidate()],
+            'proxyRevalidate' => [$builder->withProxyRevalidate()],
+            'mustUnderstand' => [$builder->withMustUnderstand()],
+            'immutable' => [$builder->withImmutable()],
+            'noTransform' => [$builder->withNoTransform()],
+            'staleWhileRevalidate' => [$builder->withStaleWhileRevalidate(3600)],
+            'staleIfError' => [$builder->withStaleIfError(3600)],
+            'expires' => [$builder->withExpires('Sun, 05 Sep 2021 00:00:00 GMT')],
+            'etag' => [$builder->withETag((new ETagHeaderBuilder())->withETag('123456'))],
+            'age' => [$builder->withAge(1)],
+            'sharedMaxAge' => [$builder->withSharedMaxAge(3600)],
+            'maxAge' => [$builder->withMaxAge(3600)],
+            'lastModified' => [$builder->withLastModified(1)],
+        ];
+    }
+
+    #[DataProvider('dataProviderReset')]
+    public function testReset(CacheHeaderBuilder $builder): void
+    {
+        $builder->noCache();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withReset()->toHeaders());
+        $builder->reset();
+        $this->assertSame([], $builder->toHeaders());
+    }
 }

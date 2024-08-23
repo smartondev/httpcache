@@ -2,6 +2,8 @@
 
 ## dev
 
+- fix: CacheHeaderBuilder::reset() lastModified reset
+
 ## 0.2.1
 
 - fix: no-cache reset fix (private, public, noStore, mustRevalidate) #2
