@@ -15,7 +15,10 @@ composer require smartondev/httpcache
 ## Usage
 
 ```php
-use SmartonDev\HttpCache\Builders\CacheHeaderBuilderBuilder;use SmartonDev\HttpCache\Builders\ETagHeaderBuilderBuilder;use SmartonDev\HttpCache\Matchers\ETagMatcher;use SmartonDev\HttpCache\Matchers\ModifiedMatcher;
+use SmartonDev\HttpCache\Builders\CacheHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Builders\ETagHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Matchers\ETagMatcher;
+use SmartonDev\HttpCache\Matchers\ModifiedMatcher;
 
 // max-age 30 day, private, no-store
 $headers = (new CacheHeaderBuilderBuilder())
