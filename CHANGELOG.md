@@ -2,7 +2,8 @@
 
 ## dev
 
-
+fix: wrong class name CacheHeaderBuilderBuilder -> CacheHeaderBuilder
+fix: wrong class name ETagHeaderBuilderBuilder -> ETagHeaderBuilder
 
 ## 0.3.0
 

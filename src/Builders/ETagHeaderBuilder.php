@@ -4,7 +4,7 @@ namespace SmartonDev\HttpCache\Builders;
 
 use SmartonDev\HttpCache\Contracts\HttpHeaderBuilderInterface;
 
-class ETagHeaderBuilderBuilder implements HttpHeaderBuilderInterface
+class ETagHeaderBuilder implements HttpHeaderBuilderInterface
 {
     public const ETAG_HEADER = 'etag';
 
