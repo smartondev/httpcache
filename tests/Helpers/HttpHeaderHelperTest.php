@@ -5,12 +5,11 @@ namespace SmartonDev\HttpCache\Tests\Helpers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SmartonDev\HttpCache\Helpers\HttpHeaderHelper;
-use SmartonDev\HttpCache\Helpers\TimeHelper;
 
 class HttpHeaderHelperTest extends TestCase
 {
 
-    public static function dataProviderGetHeaderFirstValue(): array
+    public static function dataProviderGetFirstHeaderValue(): array
     {
         return [
             [['ETag' => '"123456"'], 'ETag', '"123456"'],
@@ -22,13 +21,13 @@ class HttpHeaderHelperTest extends TestCase
         ];
     }
 
-    #[DataProvider('dataProviderGetHeaderFirstValue')]
-    public function testGetHeaderFirstValue(array $headers, string $header, ?string $expectedValue): void
+    #[DataProvider('dataProviderGetFirstHeaderValue')]
+    public function testGetFirstHeaderValue(array $headers, string $header, ?string $expectedValue): void
     {
         $this->assertSame($expectedValue, HttpHeaderHelper::getFirstHeaderValue($headers, $header));
     }
 
-    public static function dataProviderHttpHeaderDate(): array
+    public static function dataProviderToDateString(): array
     {
         return [
             [0, 'Thu, 01 Jan 1970 00:00:00 GMT'],
@@ -38,13 +37,13 @@ class HttpHeaderHelperTest extends TestCase
         ];
     }
 
-    #[DataProvider('dataProviderHttpHeaderDate')]
-    public function testHttpHeaderDate(int $timestamp, string $expectedDateString): void
+    #[DataProvider('dataProviderToDateString')]
+    public function testToDateString(int $timestamp, string $expectedDateString): void
     {
         $this->assertSame($expectedDateString, HttpHeaderHelper::toDateString($timestamp));
     }
 
-    public static function dataProviderIsValidHttpHeaderDate(): array
+    public static function dataProviderIsValidDateString(): array
     {
         return [
             ['', false],
@@ -54,8 +53,8 @@ class HttpHeaderHelperTest extends TestCase
         ];
     }
 
-    #[DataProvider('dataProviderIsValidHttpHeaderDate')]
-    public function testIsValidHttpHeaderDate(string $value, bool $expected): void
+    #[DataProvider('dataProviderIsValidDateString')]
+    public function testIsValidDateString(string $value, bool $expected): void
     {
         $this->assertSame($expected, HttpHeaderHelper::isValidDateString($value));
     }
