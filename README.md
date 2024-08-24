@@ -3,6 +3,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/smartondev/httpcache?include_prereleases)
 ![GitHub License](https://img.shields.io/github/license/smartondev/httpcache)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/smartondev/httpcache/phpunit.yml?label=tests)
+![Coveralls](https://img.shields.io/coverallsCoverage/github/smartondev/httpcache)
 
 **This code is under development and not ready for production use.**
 
