@@ -15,20 +15,20 @@ composer require smartondev/httpcache
 ## Usage
 
 ```php
-use Smartondev\HttpCache\CacheHeaderBuilder;
-use Smartondev\HttpCache\ETagHeaderBuilder;
-use Smartondev\HttpCache\ETagMatcher;
-use SmartonDev\HttpCache\ModifiedMatcher;
+use SmartonDev\HttpCache\Builders\CacheHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Builders\ETagHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Matchers\ETagMatcher;
+use SmartonDev\HttpCache\Matchers\ModifiedMatcher;
 
 // max-age 30 day, private, no-store
-$headers = (new CacheHeaderBuilder())
+$headers = (new CacheHeaderBuilderBuilder())
     ->maxAge(hours: 30)
     ->private()
     ->noStore()
     ->toHeaders();
 
 // max-age 60 sec, shared max age 120 sec, stale-while-revalidate 30 sec
-$headers = (new CacheHeaderBuilder())
+$headers = (new CacheHeaderBuilderBuilder())
     ->maxAge(60)
     ->sharedMaxAge(120)
     ->staleWhileRevalidate(30)
@@ -37,7 +37,7 @@ $headers = (new CacheHeaderBuilder())
 // etag
 $etagMatcher = (new ETagMatcher())
     ->headers($requestHeaders);
-$etagHeaderBuilder = (new ETagHeaderBuilder())
+$etagHeaderBuilder = (new ETagHeaderBuilderBuilder())
     ->computedEtag()
 if($etagMatcher->matches($etag)->matches()) {
     // 304 Not Modified

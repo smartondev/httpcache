@@ -3,6 +3,7 @@
 ## dev
 
 - fix: CacheHeaderBuilder::reset() lastModified reset
+- refactor: namespace refactoring (BC break)
 
 ## 0.2.1
 
