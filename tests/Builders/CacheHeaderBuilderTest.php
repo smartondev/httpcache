@@ -58,6 +58,149 @@ class CacheHeaderBuilderTest extends TestCase
         );
     }
 
+    public function testResetMaxAge(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withMaxAge(hours: 1);
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutMaxAge()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetMaxAge()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetSharedMaxAge(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withSharedMaxAge(hours: 1);
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutSharedMaxAge()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetSharedMaxAge()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetMustRevalidate(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withMustRevalidate();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutMustRevalidate()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetMustRevalidate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetProxyRevalidate(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withProxyRevalidate();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutProxyRevalidate()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetProxyRevalidate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetNoStore(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withNoStore();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutNoStore()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetNoStore()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetPrivate(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withPrivate();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutPrivate()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetPrivate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetPublic(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withPublic();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutPublic()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetPublic()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetMustUnderstand(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withMustUnderstand();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutMustUnderstand()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetMustUnderstand()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetNoTransform(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withNoTransform();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutNoTransform()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetNoTransform()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetImmutable(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withImmutable();
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutImmutable()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetImmutable()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetStaleWhileRevalidate(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withStaleWhileRevalidate(3600);
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutStaleWhileRevalidate()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetStaleWhileRevalidate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetStaleIfError(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withStaleIfError(3600);
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutStaleIfError()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetStaleIfError()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetETag(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withETag((new ETagHeaderBuilder())->withETag('123456'));
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutETag()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->resetETag()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+    }
+
     public function testMaxAgeWithNoStore(): void
     {
         $builder = (new CacheHeaderBuilder())
@@ -159,6 +302,44 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertSame([], $builder->toHeaders());
         $this->assertSame(['cache-control' => 'no-transform'], $builder->noTransform()->toHeaders());
         $this->assertSame(['cache-control' => 'no-transform'], $builder->toHeaders());
+    }
+
+    public function testLastModified(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->withLastModified(strtotime('Sun, 05 Sep 2021 00:00:00 GMT'))->toHeaders());
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->withLastModified(new \DateTime('Sun, 05 Sep 2021 00:00:00 GMT'))->toHeaders());
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->withLastModified('Sun, 05 Sep 2021 00:00:00 GMT')->toHeaders());
+
+        $builder = (new CacheHeaderBuilder())->lastModified(strtotime('Sun, 05 Sep 2021 00:00:00 GMT'));
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->toHeaders());
+        $builder = (new CacheHeaderBuilder())->lastModified(new \DateTime('Sun, 05 Sep 2021 00:00:00 GMT'));
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->toHeaders());
+        $builder = (new CacheHeaderBuilder())->lastModified('Sun, 05 Sep 2021 00:00:00 GMT');
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->toHeaders());
+
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->withLastModified(strtotime('Sun, 05 Sep 2021 00:00:00 GMT'))->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->lastModified(strtotime('Sun, 05 Sep 2021 00:00:00 GMT'))->toHeaders());
+        $this->assertSame(['last-modified' => 'Sun, 05 Sep 2021 00:00:00 GMT'], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutLastModified()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $builder->resetLastModified();
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testAge(): void
+    {
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['age' => '1'], $builder->withAge(1)->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['age' => '1'], $builder->age(1)->toHeaders());
+        $this->assertSame(['age' => '1'], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutAge()->toHeaders());
+        $this->assertNotSame([], $builder->toHeaders());
+        $builder->resetAge();
+        $this->assertSame([], $builder->toHeaders());
     }
 
     public function testStaleWhileRevalidate(): void
@@ -312,6 +493,16 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertNotSame([], $builder->toHeaders());
         $this->assertSame([], $builder->withReset()->toHeaders());
         $builder->reset();
+        $this->assertSame([], $builder->toHeaders());
+    }
+
+    public function testResetExpires(): void
+    {
+        $builder = (new CacheHeaderBuilder())
+            ->withExpires('Sun, 05 Sep 2021 00:00:00 GMT');
+        $this->assertNotSame([], $builder->toHeaders());
+        $this->assertSame([], $builder->withoutExpires()->toHeaders());
+        $builder->resetExpires();
         $this->assertSame([], $builder->toHeaders());
     }
 }
