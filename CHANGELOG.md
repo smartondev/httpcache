@@ -2,12 +2,12 @@
 
 ## dev
 
-
+- enh: CacheHeaderBuilder::withoutMustRevalidate() added
 
 ## 0.3.1
 
-fix: wrong class name CacheHeaderBuilderBuilder -> CacheHeaderBuilder
-fix: wrong class name ETagHeaderBuilderBuilder -> ETagHeaderBuilder
+- fix: wrong class name CacheHeaderBuilderBuilder -> CacheHeaderBuilder
+- fix: wrong class name ETagHeaderBuilderBuilder -> ETagHeaderBuilder
 
 ## 0.3.0
 
