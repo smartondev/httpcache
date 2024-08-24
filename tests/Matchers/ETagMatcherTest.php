@@ -3,7 +3,7 @@
 namespace SmartonDev\HttpCache\Tests\Matchers;
 
 use PHPUnit\Framework\TestCase;
-use SmartonDev\HttpCache\Builders\ETagHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Builders\ETagHeaderBuilder;
 use SmartonDev\HttpCache\Matchers\ETagMatcher;
 
 class ETagMatcherTest extends TestCase
@@ -76,7 +76,7 @@ class ETagMatcherTest extends TestCase
 
     public function testMatchWithETagHeaderBuilder(): void
     {
-        $ETagHeaderBuilder = (new ETagHeaderBuilderBuilder())
+        $ETagHeaderBuilder = (new ETagHeaderBuilder())
             ->withETag('123456')
             ->withWeekEtag();
         $etag = $ETagHeaderBuilder->getETag();

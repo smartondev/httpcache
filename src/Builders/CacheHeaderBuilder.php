@@ -6,7 +6,7 @@ use SmartonDev\HttpCache\Contracts\HttpHeaderBuilderInterface;
 use SmartonDev\HttpCache\Helpers\HttpHeaderHelper;
 use SmartonDev\HttpCache\Helpers\TimeHelper;
 
-class CacheHeaderBuilderBuilder implements HttpHeaderBuilderInterface
+class CacheHeaderBuilder implements HttpHeaderBuilderInterface
 {
     private const AGE_HEADER = 'age';
     private const CACHE_CONTROL_HEADER = 'cache-control';
@@ -546,13 +546,13 @@ class CacheHeaderBuilderBuilder implements HttpHeaderBuilderInterface
      *
      * If ETAG is empty, it will be reset.
      *
-     * @param string|ETagHeaderBuilderBuilder $etag
+     * @param string|ETagHeaderBuilder $etag
      * @return $this
      */
-    public function etag(string|ETagHeaderBuilderBuilder $etag): static
+    public function etag(string|ETagHeaderBuilder $etag): static
     {
         $this->resetIfNoCache();
-        if ($etag instanceof ETagHeaderBuilderBuilder) {
+        if ($etag instanceof ETagHeaderBuilder) {
             $etag = $etag->getETag();
         }
         if (is_string($etag) && trim($etag) === '') {
@@ -567,10 +567,10 @@ class CacheHeaderBuilderBuilder implements HttpHeaderBuilderInterface
      *
      * If ETAG is empty, it will be reset.
      *
-     * @param string|ETagHeaderBuilderBuilder $etag
+     * @param string|ETagHeaderBuilder $etag
      * @return $this
      */
-    public function withETag(string|ETagHeaderBuilderBuilder $etag): static
+    public function withETag(string|ETagHeaderBuilder $etag): static
     {
         return (clone $this)
             ->etag($etag);
@@ -669,7 +669,7 @@ class CacheHeaderBuilderBuilder implements HttpHeaderBuilderInterface
         }
 
         if ($this->hasETag()) {
-            $headers[ETagHeaderBuilderBuilder::ETAG_HEADER] = $this->etag;
+            $headers[ETagHeaderBuilder::ETAG_HEADER] = $this->etag;
         }
 
         return $headers;

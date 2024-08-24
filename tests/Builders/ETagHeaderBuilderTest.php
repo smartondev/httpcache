@@ -4,7 +4,7 @@ namespace SmartonDev\HttpCache\Tests\Builders;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use SmartonDev\HttpCache\Builders\ETagHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Builders\ETagHeaderBuilder;
 
 class ETagHeaderBuilderTest extends TestCase
 {
@@ -19,7 +19,7 @@ class ETagHeaderBuilderTest extends TestCase
     #[DataProvider('dataProviderWithEtag')]
     public function testWithETag(string $etag, array $expectedHeaders, array $expectedWeekHeaders): void
     {
-        $builder = (new ETagHeaderBuilderBuilder())
+        $builder = (new ETagHeaderBuilder())
             ->withETag($etag);
         $this->assertSame(
             $expectedWeekHeaders,
@@ -47,7 +47,7 @@ class ETagHeaderBuilderTest extends TestCase
     #[DataProvider('dataProviderWithComputedEtag')]
     public function testWithComputedEtag(mixed $data, callable $func, bool $weekEtag, array $expectedHeaders): void
     {
-        $builder = (new ETagHeaderBuilderBuilder())
+        $builder = (new ETagHeaderBuilder())
             ->computedETag($data, $func);
         if ($weekEtag) {
             $builder->weekETag();
@@ -57,11 +57,11 @@ class ETagHeaderBuilderTest extends TestCase
 
     public function testEmptyETag(): void
     {
-        $builder = (new ETagHeaderBuilderBuilder())
+        $builder = (new ETagHeaderBuilder())
             ->etag('');
         $this->assertNull($builder->getETag());
 
-        $builder = (new ETagHeaderBuilderBuilder())
+        $builder = (new ETagHeaderBuilder())
             ->etag('    ');
         $this->assertNull($builder->getETag());
     }

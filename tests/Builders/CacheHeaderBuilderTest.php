@@ -4,8 +4,8 @@ namespace SmartonDev\HttpCache\Tests\Builders;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use SmartonDev\HttpCache\Builders\CacheHeaderBuilderBuilder;
-use SmartonDev\HttpCache\Builders\ETagHeaderBuilderBuilder;
+use SmartonDev\HttpCache\Builders\CacheHeaderBuilder;
+use SmartonDev\HttpCache\Builders\ETagHeaderBuilder;
 
 class CacheHeaderBuilderTest extends TestCase
 {
@@ -15,7 +15,7 @@ class CacheHeaderBuilderTest extends TestCase
             'cache-control' => 'must-revalidate, no-cache, no-store, private',
             'pragma' => 'no-cache',
         ];
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withNoCache();
         $this->assertSame($noCacheExpectedHeaders, $builder->toHeaders());
         $builder = $builder->withSharedMaxAge(10);
@@ -24,23 +24,31 @@ class CacheHeaderBuilderTest extends TestCase
         $this->assertSame($noCacheExpectedHeaders, $builder->withNoCache()->toHeaders());
     }
 
-    public function testMaxAgeWithDurations(): void
+    public static function dataProviderMaxAgeWithDurations(): array
     {
-        $builder = new CacheHeaderBuilderBuilder();
-        $this->assertSame(['cache-control' => 'max-age=37'], $builder->withMaxAge(37)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=3600'], $builder->withMaxAge(hours: 1)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=1800'], $builder->withMaxAge(minutes: 30)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=60'], $builder->withMaxAge(seconds: 60)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=86400'], $builder->withMaxAge(days: 1)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=604800'], $builder->withMaxAge(weeks: 1)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=2592000'], $builder->withMaxAge(months: 1)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=31536000'], $builder->withMaxAge(years: 1)->toHeaders());
-        $this->assertSame(['cache-control' => 'max-age=3722'], $builder->withMaxAge(seconds: 2, minutes: 2, hours: 1)->toHeaders());
+        $builder = new CacheHeaderBuilder();
+        return [
+            '37' => [['cache-control' => 'max-age=37'], $builder->withMaxAge(37)],
+            'hours:1' => [['cache-control' => 'max-age=3600'], $builder->withMaxAge(hours: 1)],
+            'minutes:30' => [['cache-control' => 'max-age=1800'], $builder->withMaxAge(minutes: 30)],
+            'seconds:60' => [['cache-control' => 'max-age=60'], $builder->withMaxAge(seconds: 60)],
+            'days:1' => [['cache-control' => 'max-age=86400'], $builder->withMaxAge(days: 1)],
+            'weeks:1' => [['cache-control' => 'max-age=604800'], $builder->withMaxAge(weeks: 1)],
+            'months:1' => [['cache-control' => 'max-age=2592000'], $builder->withMaxAge(months: 1)],
+            'years:1' => [['cache-control' => 'max-age=31536000'], $builder->withMaxAge(years: 1)],
+            'seconds:2, minutes:2, hours:1' => [['cache-control' => 'max-age=3722'], $builder->withMaxAge(seconds: 2, minutes: 2, hours: 1)],
+        ];
+    }
+
+    #[DataProvider('dataProviderMaxAgeWithDurations')]
+    public function testMaxAgeWithDurations(array $expectedHeaders, CacheHeaderBuilder $builder): void
+    {
+        $this->assertSame($expectedHeaders, $builder->toHeaders());
     }
 
     public function testMaxAge(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withMaxAge(hours: 1);
         $this->assertSame(['cache-control' => 'max-age=3600'], $builder->toHeaders());
         $this->assertSame(
@@ -52,7 +60,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testMaxAgeWithNoStore(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withMaxAge(3600)
             ->withNoStore();
         $this->assertSame(['cache-control' => 'max-age=3600, no-store'], $builder->toHeaders());
@@ -60,7 +68,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testMaxAgeWithAge(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withMaxAge(3600)
             ->withAge(1800);
         $this->assertSame([
@@ -71,7 +79,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testSharedMaxAge(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withSharedMaxAge(hours: 1);
         $this->assertSame(['cache-control' => 's-maxage=3600'], $builder->toHeaders());
         $this->assertSame(
@@ -83,63 +91,79 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testNoStore(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withNoStore();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'no-store'], $builder->withNoStore()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'no-store'], $builder->noStore()->toHeaders());
         $this->assertSame(['cache-control' => 'no-store'], $builder->toHeaders());
     }
 
     public function testPrivate(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withPrivate();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'private'], $builder->withPrivate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'private'], $builder->private()->toHeaders());
         $this->assertSame(['cache-control' => 'private'], $builder->toHeaders());
     }
 
     public function testPublic(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withPublic();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'public'], $builder->withPublic()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'public'], $builder->public()->toHeaders());
         $this->assertSame(['cache-control' => 'public'], $builder->toHeaders());
     }
 
     public function testMustRevalidate(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withMustRevalidate();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'must-revalidate'], $builder->withMustRevalidate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'must-revalidate'], $builder->mustRevalidate()->toHeaders());
         $this->assertSame(['cache-control' => 'must-revalidate'], $builder->toHeaders());
     }
 
     public function testProxyRevalidate(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withProxyRevalidate();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'proxy-revalidate'], $builder->withProxyRevalidate()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'proxy-revalidate'], $builder->proxyRevalidate()->toHeaders());
         $this->assertSame(['cache-control' => 'proxy-revalidate'], $builder->toHeaders());
     }
 
     public function testMustUnderstand(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withMustUnderstand();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'must-understand'], $builder->withMustUnderstand()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'must-understand'], $builder->mustUnderstand()->toHeaders());
         $this->assertSame(['cache-control' => 'must-understand'], $builder->toHeaders());
     }
 
     public function testImmutable(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withImmutable();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'immutable'], $builder->withImmutable()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'immutable'], $builder->immutable()->toHeaders());
         $this->assertSame(['cache-control' => 'immutable'], $builder->toHeaders());
     }
 
     public function testNoTransform(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
-            ->withNoTransform();
+        $builder = new CacheHeaderBuilder();
+        $this->assertSame(['cache-control' => 'no-transform'], $builder->withNoTransform()->toHeaders());
+        $this->assertSame([], $builder->toHeaders());
+        $this->assertSame(['cache-control' => 'no-transform'], $builder->noTransform()->toHeaders());
         $this->assertSame(['cache-control' => 'no-transform'], $builder->toHeaders());
     }
 
     public function testStaleWhileRevalidate(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withStaleWhileRevalidate(hours: 1);
         $this->assertSame(['cache-control' => 'stale-while-revalidate=3600'], $builder->toHeaders());
         $this->assertSame(
@@ -161,7 +185,7 @@ class CacheHeaderBuilderTest extends TestCase
     #[DataProvider('dataProviderExpires')]
     public function testExpires(string $dt): void
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         $this->assertSame(['expires' => $dt], $builder->withExpires(strtotime($dt))->toHeaders());
         $this->assertSame(['expires' => $dt], $builder->withExpires(new \DateTime($dt))->toHeaders());
         $this->assertSame(['expires' => $dt], $builder->withExpires($dt)->toHeaders());
@@ -169,7 +193,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testStaleIfError(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withStaleIfError(3600);
         $this->assertSame(['cache-control' => 'stale-if-error=3600'], $builder->toHeaders());
         $this->assertSame(
@@ -181,9 +205,9 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testWithETag(): void
     {
-        $etagBuilder = (new ETagHeaderBuilderBuilder())
+        $etagBuilder = (new ETagHeaderBuilder())
             ->withETag('123456');
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withETag($etagBuilder);
         $headers = $builder->toHeaders();
         $this->assertSame(['etag' => '"123456"'], $headers);
@@ -191,12 +215,12 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testWithEmptyEtag(): void
     {
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withETag('');
         $this->assertNull($builder->getETag());
         $this->assertFalse($builder->hasETag());
 
-        $builder = (new CacheHeaderBuilderBuilder())
+        $builder = (new CacheHeaderBuilder())
             ->withETag('   ');
         $this->assertNull($builder->getETag());
         $this->assertFalse($builder->hasETag());
@@ -204,7 +228,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testHasLastModified(): void
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         $this->assertFalse($builder->hasLastModified());
         $builder->lastModified(1);
         $this->assertTrue($builder->hasLastModified());
@@ -214,7 +238,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testIsEmpty(): void
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         $this->assertTrue($builder->isEmpty());
         $builder->noCache();
         $this->assertFalse($builder->isEmpty());
@@ -224,7 +248,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testIsNotEmpty(): void
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         $this->assertFalse($builder->isNotEmpty());
         $builder->noCache();
         $this->assertTrue($builder->isNotEmpty());
@@ -234,7 +258,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testNoCacheReset(): void
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         $builder->noCache();
         $this->assertSame([], $builder->withReset()->toHeaders());
         $this->assertSame(['cache-control' => 'private'], $builder->withPrivate()->toHeaders());
@@ -245,7 +269,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public function testIsNoCache(): void
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         $this->assertFalse($builder->isNoCache());
         $builder->noCache();
         $this->assertTrue($builder->isNoCache());
@@ -259,7 +283,7 @@ class CacheHeaderBuilderTest extends TestCase
 
     public static function dataProviderReset(): array
     {
-        $builder = new CacheHeaderBuilderBuilder();
+        $builder = new CacheHeaderBuilder();
         return [
             'noCache' => [$builder->withNoCache()],
             'private' => [$builder->withPrivate()],
@@ -273,7 +297,7 @@ class CacheHeaderBuilderTest extends TestCase
             'staleWhileRevalidate' => [$builder->withStaleWhileRevalidate(3600)],
             'staleIfError' => [$builder->withStaleIfError(3600)],
             'expires' => [$builder->withExpires('Sun, 05 Sep 2021 00:00:00 GMT')],
-            'etag' => [$builder->withETag((new ETagHeaderBuilderBuilder())->withETag('123456'))],
+            'etag' => [$builder->withETag((new ETagHeaderBuilder())->withETag('123456'))],
             'age' => [$builder->withAge(1)],
             'sharedMaxAge' => [$builder->withSharedMaxAge(3600)],
             'maxAge' => [$builder->withMaxAge(3600)],
@@ -282,7 +306,7 @@ class CacheHeaderBuilderTest extends TestCase
     }
 
     #[DataProvider('dataProviderReset')]
-    public function testReset(CacheHeaderBuilderBuilder $builder): void
+    public function testReset(CacheHeaderBuilder $builder): void
     {
         $builder->noCache();
         $this->assertNotSame([], $builder->toHeaders());
