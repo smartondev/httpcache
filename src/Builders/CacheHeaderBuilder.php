@@ -276,6 +276,12 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
         return $this;
     }
 
+    public function withoutMustRevalidate(): static
+    {
+        return (clone $this)
+            ->resetMustRevalidate();
+    }
+
     public function proxyRevalidate(): static
     {
         $this->resetIfNoCache();
