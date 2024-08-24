@@ -5,34 +5,10 @@ namespace SmartonDev\HttpCache\Matchers;
 use SmartonDev\HttpCache\Helpers\HttpHeaderHelper;
 use SmartonDev\HttpCache\Helpers\TimeHelper;
 
-class ModifiedMatcher
+class ModifiedMatcher extends MatcherHeaderAbstract
 {
     private const IF_MODIFIED_SINCE_HEADER = 'if-modified-since';
     private const IF_UNMODIFIED_SINCE_HEADER = 'if-unmodified-since';
-
-    private array $headers = [];
-
-    public function headers(array $headers): static
-    {
-        $this->headers = HttpHeaderHelper::replaceHeaders([], $headers);
-        return $this;
-    }
-
-    public function withHeaders(array $headers): static
-    {
-        return (clone $this)->headers($headers);
-    }
-
-    public function resetHeaders(): static
-    {
-        $this->headers = [];
-        return $this;
-    }
-
-    public function withoutHeaders(): static
-    {
-        return (clone $this)->resetHeaders();
-    }
 
     public function ifModifiedSinceHeader(string|array $ifModifiedSince): static
     {
