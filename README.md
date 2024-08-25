@@ -79,15 +79,28 @@ $builder = (new CacheHeaderBuilder())
 
 ### Mutable and immutable accessors
 
-˙with˙ prefixed methods are immutable, eg. `withMaxAge()`. Methods without `with` prefix are mutable, eg. `maxAge()`.
+- `with` prefixed methods are immutable, eg. `withMaxAge()`. Methods without `with` prefix are mutable, eg. `maxAge()`.
+- `without` prefixed methods are immutable, eg. `withoutMaxAge()`. Methods with `reset` prefix are mutable, eg.
+  `resetMaxAge()`.
 
 ```php
 $builderA = new CacheHeaderBuilder();
 // mutable
 $builderA->maxAge(30);
+$builderA->resetMaxAge();
+
 // immutable
 $builderB = $builderA->withMaxAge(60);
+$builderC = $builderB->withoutMaxAge();
 ```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## License
+
+This project is open-sourced software [licensed under](LICENSE).
 
 ## Author
 
