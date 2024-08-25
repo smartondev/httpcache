@@ -58,7 +58,7 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
         return (clone $this)->weekETag($week);
     }
 
-    public function resetETagWeek(): static
+    public function resetWeekETag(): static
     {
         $this->weekETag = false;
         return $this;
@@ -66,7 +66,7 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
 
     public function withoutWeekETag(): static
     {
-        return (clone $this)->resetETagWeek();
+        return (clone $this)->resetWeekETag();
     }
 
     public function toHeaders(): array
