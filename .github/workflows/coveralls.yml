@@ -8,6 +8,7 @@ on:
       - 'README.md'
       - 'LICENSE'
       - 'CHANGELOG.md'
+      - 'CONTRIBUTING.md'
 
 jobs:
   phpunit:
