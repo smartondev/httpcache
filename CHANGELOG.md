@@ -2,6 +2,9 @@
 
 ## dev
 
+
+## 0.4.0
+
 - enh: CacheHeaderBuilder::withoutMustRevalidate() added
 - refactor: ETagHeaderBuilder::resetETagWeek() -> resetWeekETag() (BC break)
 
