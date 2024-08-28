@@ -2,6 +2,8 @@
 
 ## dev
 
+- fix: ModifiedMatcher::ifModifiedSinceHeader(), ::withIfModifiedSinceHeader(), ::ifUnmodifiedSinceHeader(),
+  ::withIfUnmodifiedSinceHeader() invalid header date addition
 
 ## 0.4.0
 

@@ -10,26 +10,26 @@ class ModifiedMatcher extends MatcherHeaderAbstract
     private const IF_MODIFIED_SINCE_HEADER = 'if-modified-since';
     private const IF_UNMODIFIED_SINCE_HEADER = 'if-unmodified-since';
 
-    public function ifModifiedSinceHeader(string|array $ifModifiedSince): static
+    public function ifModifiedSinceHeader(string|array $ifModifiedSinceHeaderValue): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MODIFIED_SINCE_HEADER, $ifModifiedSince]);
+        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MODIFIED_SINCE_HEADER => $ifModifiedSinceHeaderValue]);
         return $this;
     }
 
-    public function withIfModifiedSinceHeader(string|array $ifModifiedSince): static
+    public function withIfModifiedSinceHeader(string|array $ifModifiedSinceHeaderValue): static
     {
-        return (clone $this)->ifModifiedSinceHeader($ifModifiedSince);
+        return (clone $this)->ifModifiedSinceHeader($ifModifiedSinceHeaderValue);
     }
 
-    public function ifUnmodifiedSinceHeader(string|array $ifUnmodifiedSince): static
+    public function ifUnmodifiedSinceHeader(string|array $ifUnmodifiedSinceHeaderValue): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_UNMODIFIED_SINCE_HEADER, $ifUnmodifiedSince]);
+        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_UNMODIFIED_SINCE_HEADER => $ifUnmodifiedSinceHeaderValue]);
         return $this;
     }
 
-    public function withIfUnmodifiedSinceHeader(string|array $ifUnmodifiedSince): static
+    public function withIfUnmodifiedSinceHeader(string|array $ifUnmodifiedSinceHeaderValue): static
     {
-        return (clone $this)->ifUnmodifiedSinceHeader($ifUnmodifiedSince);
+        return (clone $this)->ifUnmodifiedSinceHeader($ifUnmodifiedSinceHeaderValue);
     }
 
     public function getIfModifiedSinceHeader(): ?string
@@ -62,7 +62,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
             return null;
         }
         if (!$this->isValidIfModifiedSinceHeader()) {
-            throw new \RuntimeException('Invalid If-Modified-Since header');
+            throw new \RuntimeException('Invalid If-Modified-Since header value');
         }
         return TimeHelper::toTimestamp($this->getIfModifiedSinceHeader());
     }
@@ -83,7 +83,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
             return null;
         }
         if (!$this->isValidIfUnmodifiedSinceHeader()) {
-            throw new \RuntimeException('Invalid If-Unmodified-Since header');
+            throw new \RuntimeException('Invalid If-Unmodified-Since header value');
         }
         return TimeHelper::toTimestamp($this->getIfUnmodifiedSinceHeader());
     }
