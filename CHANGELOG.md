@@ -6,6 +6,7 @@
   ::withIfUnmodifiedSinceHeader() invalid header value addition
 - fix: ETagMatcher::ifMatchHeader(), ::withIfMatchHeader(), ::ifNoneMatchHeader(), ::withIfNoneMatchHeader() invalid
   header value addition
+- remove: ETagMatcherResult::matches() removed (BC break)
 
 ## 0.4.0
 

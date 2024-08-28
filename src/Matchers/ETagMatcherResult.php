@@ -30,9 +30,4 @@ readonly class ETagMatcherResult
     {
         return !$this->matchesIfNoneMatchHeader;
     }
-
-    public function matches(): bool
-    {
-        return $this->matchesIfMatchHeader || $this->matchesIfNoneMatchHeader;
-    }
 }
