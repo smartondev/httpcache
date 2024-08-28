@@ -69,6 +69,28 @@ class ModifiedMatcherTest extends TestCase
         $this->assertSame($expectedIfUnmodifiedSinceAsTimestamp, $matcher->getIfUnmodifiedSinceHeaderAsTimestamp());
     }
 
+    public function testGetModifiedSinceHeaderAsTimestampInvalidValue(): void
+    {
+        $matcher = (new ModifiedMatcher())->headers([
+            'If-Modified-Since' => 'apple',
+        ]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid If-Modified-Since header value');
+        $matcher->getIfModifiedSinceHeaderAsTimestamp();
+    }
+
+    public function testGetUnmodifiedSinceHeaderAsTimestampInvalidValue(): void
+    {
+        $matcher = (new ModifiedMatcher())->headers([
+            'If-Unmodified-Since' => 'apple',
+        ]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid If-Unmodified-Since header value');
+        $matcher->getIfUnmodifiedSinceHeaderAsTimestamp();
+    }
+
     public function testMatchesIfModifiedSince(): void
     {
         $matcher = (new ModifiedMatcher())->headers([
@@ -95,5 +117,29 @@ class ModifiedMatcherTest extends TestCase
         $this->assertTrue($matcher->matches($dtBefore)->isUnmodifiedSince());
         $this->assertFalse($matcher->matches($dtAfter)->isUnmodifiedSince());
         $this->assertFalse($matcher->matches($dtEq)->isModifiedSince());
+    }
+
+    public function testIfModifiedSinceHeader(): void
+    {
+        $matcher = new ModifiedMatcher();
+        $matcher2 = $matcher->withIfModifiedSinceHeader('Tue, 15 Nov 1994 12:45:26 GMT');
+        $this->assertFalse($matcher->hasIfModifiedSinceHeader());
+        $this->assertTrue($matcher2->hasIfModifiedSinceHeader());
+        $this->assertSame('Tue, 15 Nov 1994 12:45:26 GMT', $matcher2->getIfModifiedSinceHeader());
+        $matcher->ifModifiedSinceHeader('Wed, 16 Nov 1994 12:45:26 GMT');
+        $this->assertTrue($matcher->hasIfModifiedSinceHeader());
+        $this->assertSame('Wed, 16 Nov 1994 12:45:26 GMT', $matcher->getIfModifiedSinceHeader());
+    }
+
+    public function testIfUnmodifiedSinceHeader(): void
+    {
+        $matcher = new ModifiedMatcher();
+        $matcher2 = $matcher->withIfUnmodifiedSinceHeader('Tue, 15 Nov 1994 12:45:26 GMT');
+        $this->assertFalse($matcher->hasIfUnmodifiedSinceHeader());
+        $this->assertTrue($matcher2->hasIfUnmodifiedSinceHeader());
+        $this->assertSame('Tue, 15 Nov 1994 12:45:26 GMT', $matcher2->getIfUnmodifiedSinceHeader());
+        $matcher->ifUnmodifiedSinceHeader('Wed, 16 Nov 1994 12:45:26 GMT');
+        $this->assertTrue($matcher->hasIfUnmodifiedSinceHeader());
+        $this->assertSame('Wed, 16 Nov 1994 12:45:26 GMT', $matcher->getIfUnmodifiedSinceHeader());
     }
 }
