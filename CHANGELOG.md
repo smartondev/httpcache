@@ -2,6 +2,10 @@
 
 ## dev
 
+
+
+## 0.5.0
+
 - fix: ModifiedMatcher::ifModifiedSinceHeader(), ::withIfModifiedSinceHeader(), ::ifUnmodifiedSinceHeader(),
   ::withIfUnmodifiedSinceHeader() invalid header value addition
 - fix: ETagMatcher::ifMatchHeader(), ::withIfMatchHeader(), ::ifNoneMatchHeader(), ::withIfNoneMatchHeader() invalid
