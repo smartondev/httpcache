@@ -3,7 +3,9 @@
 ## dev
 
 - fix: ModifiedMatcher::ifModifiedSinceHeader(), ::withIfModifiedSinceHeader(), ::ifUnmodifiedSinceHeader(),
-  ::withIfUnmodifiedSinceHeader() invalid header date addition
+  ::withIfUnmodifiedSinceHeader() invalid header value addition
+- fix: ETagMatcher::ifMatchHeader(), ::withIfMatchHeader(), ::ifNoneMatchHeader(), ::withIfNoneMatchHeader() invalid
+  header value addition
 
 ## 0.4.0
 

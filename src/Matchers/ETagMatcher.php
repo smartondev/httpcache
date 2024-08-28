@@ -11,7 +11,7 @@ class ETagMatcher extends MatcherHeaderAbstract
 
     public function ifMatchHeader(string|array $ifMatch): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MATCH_HEADER, $ifMatch]);
+        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MATCH_HEADER => $ifMatch]);
         return $this;
     }
 
@@ -22,7 +22,7 @@ class ETagMatcher extends MatcherHeaderAbstract
 
     public function ifNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_NONE_MATCH_HEADER, $ifNoneMatch]);
+        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_NONE_MATCH_HEADER => $ifNoneMatch]);
         return $this;
     }
 
