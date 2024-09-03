@@ -9,6 +9,7 @@ on:
       - 'LICENSE'
       - 'CHANGELOG.md'
       - 'CONTRIBUTING.md'
+      - 'doc/**'
 
 jobs:
   phpunit:

@@ -1,12 +1,13 @@
-# HTTP Cache - `smartondev/httpcache`
+# Build HTTP cache headers, ETag and modified matchers
 
 ![GitHub Release](https://img.shields.io/github/v/release/smartondev/httpcache?include_prereleases)
 [![GitHub License](https://img.shields.io/github/license/smartondev/httpcache)](LICENSE)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/smartondev/httpcache/phpunit.yml?label=tests)
-[![Coverage Status](https://img.shields.io/coverallsCoverage/github/smartondev/httpcache)](https://coveralls.io/github/smartondev/httpcache?branch=main)
-[![Codecov](https://img.shields.io/codecov/c/github/smartondev/httpcache)](https://app.codecov.io/gh/smartondev/httpcache)
+[![Coverage Status](https://img.shields.io/coverallsCoverage/github/smartondev/httpcache?label=coveralls)](https://coveralls.io/github/smartondev/httpcache?branch=main)
+[![Codecov](https://img.shields.io/codecov/c/github/smartondev/httpcache?label=codecov)](https://app.codecov.io/gh/smartondev/httpcache)
 
-**This code is under development and not ready for production use.**
+This package helps you to build HTTP cache headers like `Cache-Control`, `ETag` and matchers like `If-None-Match`,
+`If-Modified-Since`. It is useful for building HTTP cache headers and matchers in your application.
 
 ## Installation
 
@@ -94,6 +95,13 @@ $builderA->resetMaxAge();
 $builderB = $builderA->withMaxAge(60);
 $builderC = $builderB->withoutMaxAge();
 ```
+
+### More documentation
+
+- [CacheHeaderBuilder](doc/cache-header-builder.md): building cache headers like `Cache-Control`
+- [ETagHeaderBuilder](doc/etag-header-builder.md): building ETag header
+- [ETagMatcher](doc/etag-matcher.md): matching ETag headers like `If-Match`, `If-None-Match`
+- [ModifiedMatcher](doc/modified-matcher.md): matching modified headers like `If-Modified-Since`, `If-Unmodified-Since`
 
 ## Contributing
 
