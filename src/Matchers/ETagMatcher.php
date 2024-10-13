@@ -9,23 +9,43 @@ class ETagMatcher extends MatcherHeaderAbstract
     private const IF_MATCH_HEADER = 'if-match';
     private const IF_NONE_MATCH_HEADER = 'if-none-match';
 
+    /**
+     * Set If-Match header.
+     *
+     * @param string|array $ifMatch if-match header value or values
+     */
     public function ifMatchHeader(string|array $ifMatch): static
     {
         $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MATCH_HEADER => $ifMatch]);
         return $this;
     }
 
+    /**
+     * New instance with If-Match header.
+     *
+     * @param string|array $ifMatch if-match header value or values
+     */
     public function withIfMatchHeader(string|array $ifMatch): static
     {
         return (clone $this)->ifMatchHeader($ifMatch);
     }
 
+    /**
+     * Set If-None-Match header.
+     *
+     * @param string|array $ifNoneMatch if-none-match header value or values
+     */
     public function ifNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
         $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_NONE_MATCH_HEADER => $ifNoneMatch]);
         return $this;
     }
 
+    /**
+     * New instance with If-None-Match header.
+     *
+     * @param string|array $ifNoneMatch if-none-match header value or values
+     */
     public function withIfNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
         return (clone $this)->ifNoneMatchHeaderValue($ifNoneMatch);
@@ -51,6 +71,9 @@ class ETagMatcher extends MatcherHeaderAbstract
         return $this->getIfMatchHeader() !== null;
     }
 
+    /**
+     * Etag header match result.
+     */
     public function matches(null|string|array $etag): ETagMatcherResult
     {
         if (null === $etag) {

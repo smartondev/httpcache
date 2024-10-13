@@ -10,23 +10,43 @@ class ModifiedMatcher extends MatcherHeaderAbstract
     private const IF_MODIFIED_SINCE_HEADER = 'if-modified-since';
     private const IF_UNMODIFIED_SINCE_HEADER = 'if-unmodified-since';
 
+    /**
+     * Set If-Modified-Since header.
+     *
+     * @param string|array $ifModifiedSinceHeaderValue if-modified-since header value or values
+     */
     public function ifModifiedSinceHeader(string|array $ifModifiedSinceHeaderValue): static
     {
         $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MODIFIED_SINCE_HEADER => $ifModifiedSinceHeaderValue]);
         return $this;
     }
 
+    /**
+     * New instance with If-Modified-Since header.
+     *
+     * @param string|array $ifModifiedSinceHeaderValue if-modified-since header value or values
+     */
     public function withIfModifiedSinceHeader(string|array $ifModifiedSinceHeaderValue): static
     {
         return (clone $this)->ifModifiedSinceHeader($ifModifiedSinceHeaderValue);
     }
 
+    /**
+     * Set If-Unmodified-Since header.
+     *
+     * @param string|array $ifUnmodifiedSinceHeaderValue if-unmodified-since header value or values
+     */
     public function ifUnmodifiedSinceHeader(string|array $ifUnmodifiedSinceHeaderValue): static
     {
         $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_UNMODIFIED_SINCE_HEADER => $ifUnmodifiedSinceHeaderValue]);
         return $this;
     }
 
+    /**
+     * New instance with If-Unmodified-Since header.
+     *
+     * @param string|array $ifUnmodifiedSinceHeaderValue if-unmodified-since header value or values
+     */
     public function withIfUnmodifiedSinceHeader(string|array $ifUnmodifiedSinceHeaderValue): static
     {
         return (clone $this)->ifUnmodifiedSinceHeader($ifUnmodifiedSinceHeaderValue);
@@ -56,6 +76,9 @@ class ModifiedMatcher extends MatcherHeaderAbstract
         return !$this->isValidIfModifiedSinceHeader();
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function getIfModifiedSinceHeaderAsTimestamp(): ?int
     {
         if (!$this->hasIfModifiedSinceHeader()) {
@@ -77,6 +100,9 @@ class ModifiedMatcher extends MatcherHeaderAbstract
         return $this->getIfUnmodifiedSinceHeader() !== null;
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function getIfUnmodifiedSinceHeaderAsTimestamp(): ?int
     {
         if (!$this->hasIfUnmodifiedSinceHeader()) {
@@ -102,6 +128,10 @@ class ModifiedMatcher extends MatcherHeaderAbstract
         return !$this->isValidIfUnmodifiedSinceHeader();
     }
 
+    /**
+     * Modified match result.
+     * @throws \DateMalformedStringException
+     */
     public function matches(int|string|\DateTime $baseData): ModifiedMatcherResult
     {
         $baseTimestamp = TimeHelper::toTimestamp($baseData);

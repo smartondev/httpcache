@@ -12,6 +12,11 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
 
     private bool $weekETag = false;
 
+    /**
+     * Set ETag header
+     *
+     * If $etag is empty, it will be set to null
+     */
     public function etag(null|string $etag, bool $isWeek = false): static
     {
         if (trim($etag) === '') {
@@ -21,49 +26,82 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
         return $this->weekETag($isWeek);
     }
 
+    /**
+     * Set ETag header from computed value
+     *
+     * If $etag is empty, it will be set to null
+     */
     public function computedETag(mixed $data, callable $func, bool $week = false): static
     {
         return $this->etag(call_user_func($func, $data), $week);
     }
 
+    /**
+     * New instance with ETag header
+     *
+     * If $etag is empty, it will be set to null
+     */
     public function withComputedETag(mixed $data, callable $func, bool $week = false): static
     {
         return (clone $this)->computedETag($data, $func, $week);
     }
 
+    /**
+     * New instance with ETag header
+     *
+     * If $etag is empty, it will be set to null
+     */
     public function withEtag(?string $etag): static
     {
         return (clone $this)->etag($etag);
     }
 
+    /**
+     * Reset ETag header
+     */
     public function resetETag(): static
     {
         $this->etag = null;
         return $this;
     }
 
+    /**
+     * New instance without ETag header
+     */
     public function withoutETag(): static
     {
         return (clone $this)->resetETag();
     }
 
+    /**
+     * Set ETag header to weak
+     */
     public function weekETag(bool $week = true): static
     {
         $this->weekETag = $week;
         return $this;
     }
 
+    /**
+     * New instance with weak ETag header
+     */
     public function withWeekETag(bool $week = true): static
     {
         return (clone $this)->weekETag($week);
     }
 
+    /**
+     * Reset ETag header to strong
+     */
     public function resetWeekETag(): static
     {
         $this->weekETag = false;
         return $this;
     }
 
+    /**
+     * New instance without weak ETag header
+     */
     public function withoutWeekETag(): static
     {
         return (clone $this)->resetWeekETag();

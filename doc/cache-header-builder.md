@@ -40,7 +40,7 @@ $headers = (new CacheHeaderBuilder())
 
 ### Caching in CDN
 
-Caching in CDN for 60 seconds, shared max age 30 seconds.
+Caching in CDN for 60 seconds, and in browser for 30 seconds.
 
 ```php
 $headers = (new CacheHeaderBuilder())

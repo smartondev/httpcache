@@ -2,6 +2,8 @@
 
 namespace SmartonDev\HttpCache\Helpers;
 
+use DateTime;
+
 class TimeHelper
 {
     public static function durationToSeconds(int $seconds = 0,
@@ -21,13 +23,18 @@ class TimeHelper
             + $years * 86400 * 365;
     }
 
-    public static function toTimestamp(int|string|\DateTime $input): int
+    /**
+     * @param int|string|DateTime $input int timestamp, string date (DateTime input) or DateTime object
+     * @return int
+     * @throws \DateMalformedStringException
+     */
+    public static function toTimestamp(int|string|DateTime $input): int
     {
         if (is_int($input)) {
             return $input;
         }
-        if (!($input instanceof \DateTime)) {
-            $input = new \DateTime($input);
+        if (!($input instanceof DateTime)) {
+            $input = new DateTime($input);
         }
         return $input->getTimestamp();
     }

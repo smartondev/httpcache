@@ -17,15 +17,14 @@ composer require smartondev/httpcache
 
 ## Usage
 
+### Cache headers
+
 ```php
 use SmartonDev\HttpCache\Builders\CacheHeaderBuilder;
-use SmartonDev\HttpCache\Builders\ETagHeaderBuilder;
-use SmartonDev\HttpCache\Matchers\ETagMatcher;
-use SmartonDev\HttpCache\Matchers\ModifiedMatcher;
 
-// max-age 30 day, private, no-store
+// max-age 1 hour, private, no-store
 $headers = (new CacheHeaderBuilder())
-    ->maxAge(hours: 30)
+    ->maxAge(hours: 1)
     ->private()
     ->noStore()
     ->toHeaders();
@@ -36,27 +35,9 @@ $headers = (new CacheHeaderBuilder())
     ->sharedMaxAge(120)
     ->staleWhileRevalidate(30)
     ->toHeaders();
-
-// etag
-$etagMatcher = (new ETagMatcher())
-    ->headers($requestHeaders);
-$etagHeaderBuilder = (new ETagHeaderBuilder())
-    ->computedEtag()
-if($etagMatcher->matches($etag)->matches()) {
-    // 304 Not Modified
-    return response(null, 304);
-}
-
-// modified since
-$modifiedMatcher = (new ModifiedMatcher())
-    ->headers($requestHeaders);
-if($modifiedMatcher->matches($lastModified)->matchesModifiedAt()) {
-    // 304 Not Modified
-    return response(null, 304);
-}
 ```
 
-## No-cache
+#### No-cache
 
 ```php
 $noCacheHeaders = (new CacheHeaderBuilder())
@@ -64,7 +45,7 @@ $noCacheHeaders = (new CacheHeaderBuilder())
     ->toHeaders();
 ```
 
-### Durations
+#### Durations
 
 ```php
 $builder = (new CacheHeaderBuilder())
@@ -79,7 +60,36 @@ $builder = (new CacheHeaderBuilder())
     ->maxAge(days: 10, hours: 5, minutes: 30) // 10 days 5 hours 30 minutes
 ```
 
-### Mutable and immutable accessors
+### Etag check
+
+```php
+use SmartonDev\HttpCache\Matchers\ETagMatcher;
+
+// ETag check
+$etagMatcher = (new ETagMatcher())
+    ->headers($requestHeaders);
+$activeEtag = '1234';
+if($etagMatcher->matches($activeEtag)->matches()) {
+    // 304 Not Modified
+    return response(null, 304);
+}
+```
+
+### Modified check
+
+```php
+use SmartonDev\HttpCache\Matchers\ModifiedMatcher;
+
+// modified since
+$modifiedMatcher = (new ModifiedMatcher())
+    ->headers($requestHeaders);
+if($modifiedMatcher->matches($lastModified)->matchesModifiedAt()) {
+    // 304 Not Modified
+    return response(null, 304);
+}
+```
+
+## Mutable and immutable accessors
 
 - `with` prefixed methods are immutable, eg. `withMaxAge()`. Methods without `with` prefix are mutable, eg. `maxAge()`.
 - `without` prefixed methods are immutable, eg. `withoutMaxAge()`. Methods with `reset` prefix are mutable, eg.
@@ -88,15 +98,15 @@ $builder = (new CacheHeaderBuilder())
 ```php
 $builderA = new CacheHeaderBuilder();
 // mutable
-$builderA->maxAge(30);
-$builderA->resetMaxAge();
+$builderA->maxAge(30)
+         ->resetMaxAge();
 
 // immutable
 $builderB = $builderA->withMaxAge(60);
 $builderC = $builderB->withoutMaxAge();
 ```
 
-### More documentation
+## More documentation
 
 - [CacheHeaderBuilder](doc/cache-header-builder.md): building cache headers like `Cache-Control`
 - [ETagHeaderBuilder](doc/etag-header-builder.md): building ETag header
