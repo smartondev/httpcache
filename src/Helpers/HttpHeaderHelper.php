@@ -26,16 +26,17 @@ class HttpHeaderHelper
     {
         $name = strtolower($name);
         foreach ($headers as $key => $value) {
-            if (strtolower($key) === $name) {
-                if(!is_array($value)) {
-                    return $value;
-                }
-                $firstValue = reset($value);
-                if(false === $firstValue) {
-                    return null;
-                }
-                return $firstValue;
+            if (strtolower($key) !== $name) {
+                continue;
             }
+            if(!is_array($value)) {
+                return $value;
+            }
+            $firstValue = reset($value);
+            if(false === $firstValue) {
+                return null;
+            }
+            return $firstValue;
         }
         return null;
     }
