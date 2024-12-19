@@ -949,6 +949,9 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
         }
 
         if ($this->hasETag()) {
+            if(null === $this->etag) {
+                throw new \LogicException('ETag is empty');
+            }
             $headers[ETagHeaderBuilder::ETAG_HEADER] = $this->etag;
         }
 
