@@ -13,8 +13,8 @@
     "php": "^8.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^11.0",
-    "phpstan/phpstan": "^2.0"
+    "phpstan/phpstan": "^2.0",
+    "pestphp/pest": "^3.7"
   },
   "autoload": {
     "psr-4": {
@@ -24,6 +24,11 @@
   "autoload-dev": {
     "psr-4": {
       "SmartonDev\\HttpCache\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
     }
   }
 }
