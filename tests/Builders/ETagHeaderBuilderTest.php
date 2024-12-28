@@ -39,8 +39,8 @@ class ETagHeaderBuilderTest extends TestCase
             ['contentABC', 'sha1', true, ['etag' => 'W/"' . sha1('contentABC') . '"']],
             ['contentABCDE', 'strval', false, ['etag' => '"contentABCDE"']],
             ['contentABCDEFG', 'strval', true, ['etag' => 'W/"contentABCDEFG"']],
-            [2, fn($d) => $d * 11, false, ['etag' => '"22"']],
-            [35, fn($d) => $d / 5, true, ['etag' => 'W/"7"']],
+            [2, fn($d) => strval($d * 11), false, ['etag' => '"22"']],
+            [35, fn($d) => strval($d / 5), true, ['etag' => 'W/"7"']],
         ];
     }
 
