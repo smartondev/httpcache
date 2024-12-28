@@ -10,7 +10,7 @@ on:
       - 'doc/**'
 
 jobs:
-  phpunit:
+  pest:
     runs-on: ubuntu-latest
 
     strategy:
