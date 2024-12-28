@@ -2,6 +2,7 @@
 
 namespace SmartonDev\HttpCache\Matchers;
 
+use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
 use SmartonDev\HttpCache\Helpers\HttpHeaderHelper;
 use SmartonDev\HttpCache\Helpers\TimeHelper;
 
@@ -77,7 +78,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
     }
 
     /**
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function getIfModifiedSinceHeaderAsTimestamp(): ?int
     {
@@ -105,7 +106,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
     }
 
     /**
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function getIfUnmodifiedSinceHeaderAsTimestamp(): ?int
     {
@@ -138,7 +139,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
 
     /**
      * Modified match result.
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function matches(int|string|\DateTime $baseData): ModifiedMatcherResult
     {

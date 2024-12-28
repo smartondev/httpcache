@@ -4,6 +4,7 @@ namespace SmartonDev\HttpCache\Builders;
 
 use Datetime;
 use SmartonDev\HttpCache\Contracts\HttpHeaderBuilderInterface;
+use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
 use SmartonDev\HttpCache\Helpers\HttpHeaderHelper;
 use SmartonDev\HttpCache\Helpers\TimeHelper;
 
@@ -107,7 +108,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
      *
      * @param int|string|Datetime $expires int timestamp, string date (DateTime input) or DateTime object
      * @return static
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function expires(int|string|Datetime $expires): static
     {
@@ -123,7 +124,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
      *
      * @param int|string|Datetime $expires int timestamp, string date (DateTime input) or DateTime object
      * @return static
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function withExpires(int|string|DateTime $expires): static
     {
@@ -156,7 +157,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
      *
      * @param int|string|Datetime $lastModified int timestamp, string date (DateTime input) or DateTime object
      * @return static
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function lastModified(int|string|DateTime $lastModified): static
     {
@@ -172,7 +173,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
      *
      * @param int|string|Datetime $lastModified int timestamp, string date (DateTime input) or DateTime object
      * @return static
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public function withLastModified(int|string|DateTime $lastModified): static
     {
