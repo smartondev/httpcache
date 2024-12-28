@@ -19,6 +19,9 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
      */
     public function etag(null|string $etag, bool $isWeek = false): static
     {
+        if(null === $etag) {
+            return $this->weekETag(false);
+        }
         if (trim($etag) === '') {
             $etag = null;
         }
@@ -33,7 +36,11 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
      */
     public function computedETag(mixed $data, callable $func, bool $week = false): static
     {
-        return $this->etag(call_user_func($func, $data), $week);
+        $etag = call_user_func($func, $data);
+        if(!is_string($etag) && null !== $etag) {
+            throw new \InvalidArgumentException('ETag must be a string or null');
+        }
+        return $this->etag($etag, $week);
     }
 
     /**
@@ -112,8 +119,12 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
         if ($this->isEmpty()) {
             return [];
         }
+        $etag = $this->getETag();
+        if(null === $etag) {
+            throw new \LogicException('ETag is empty');
+        }
         return [
-            self::ETAG_HEADER => $this->getETag(),
+            self::ETAG_HEADER => $etag,
         ];
     }
 

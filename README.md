@@ -2,7 +2,8 @@
 
 ![GitHub Release](https://img.shields.io/github/v/release/smartondev/httpcache?include_prereleases)
 [![GitHub License](https://img.shields.io/github/license/smartondev/httpcache)](LICENSE)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/smartondev/httpcache/phpunit.yml?label=tests)
+![PHPUnit - GitHub Actions](https://img.shields.io/github/actions/workflow/status/smartondev/httpcache/phpunit.yml?label=tests)
+![PHPStan level 10 - GitHub Actions](https://img.shields.io/github/actions/workflow/status/smartondev/httpcache/phpstan.yml?label=PHPStan%20level%2010)
 [![Coverage Status](https://img.shields.io/coverallsCoverage/github/smartondev/httpcache?label=coveralls)](https://coveralls.io/github/smartondev/httpcache?branch=main)
 [![Codecov](https://img.shields.io/codecov/c/github/smartondev/httpcache?label=codecov)](https://app.codecov.io/gh/smartondev/httpcache)
 

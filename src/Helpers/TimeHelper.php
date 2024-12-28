@@ -3,6 +3,7 @@
 namespace SmartonDev\HttpCache\Helpers;
 
 use DateTime;
+use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
 
 class TimeHelper
 {
@@ -26,15 +27,25 @@ class TimeHelper
     /**
      * @param int|string|DateTime $input int timestamp, string date (DateTime input) or DateTime object
      * @return int
-     * @throws \DateMalformedStringException
+     * @throws DateMalformedStringException
      */
     public static function toTimestamp(int|string|DateTime $input): int
     {
         if (is_int($input)) {
             return $input;
         }
-        if (!($input instanceof DateTime)) {
+        if ($input instanceof DateTime) {
+            return $input->getTimestamp();
+        }
+        try {
             $input = new DateTime($input);
+        } catch (\Exception $e) {
+            // before php8.3 \DateMalformedStringException is not available
+            throw new DateMalformedStringException(
+                message: $e->getMessage(),
+                code: $e->getCode(),
+                previous: $e,
+            );
         }
         return $input->getTimestamp();
     }

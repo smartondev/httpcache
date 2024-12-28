@@ -19,17 +19,33 @@ class HttpHeaderHelper
         return HttpHeaderHelper::toDateString($ts) === $date;
     }
 
+    /**
+     * @param array<string, string|array<string>> $headers
+     */
     public static function getFirstHeaderValue(array $headers, string $name): ?string
     {
         $name = strtolower($name);
         foreach ($headers as $key => $value) {
-            if (strtolower($key) === $name) {
-                return is_array($value) ? reset($value) : $value;
+            if (strtolower($key) !== $name) {
+                continue;
             }
+            if(!is_array($value)) {
+                return $value;
+            }
+            $firstValue = reset($value);
+            if(false === $firstValue) {
+                return null;
+            }
+            return $firstValue;
         }
         return null;
     }
 
+    /**
+     * @param array<string, string|array<string>> $headers
+     * @param array<string, string|array<string>> $replaceHeaders
+     * @return array<string, string|array<string>>
+     */
     public static function replaceHeaders(array $headers, array $replaceHeaders): array
     {
         $output = [];

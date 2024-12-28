@@ -12,7 +12,7 @@ class ETagMatcher extends MatcherHeaderAbstract
     /**
      * Set If-Match header.
      *
-     * @param string|array $ifMatch if-match header value or values
+     * @param string|array<string> $ifMatch if-match header value or values
      */
     public function ifMatchHeader(string|array $ifMatch): static
     {
@@ -23,7 +23,7 @@ class ETagMatcher extends MatcherHeaderAbstract
     /**
      * New instance with If-Match header.
      *
-     * @param string|array $ifMatch if-match header value or values
+     * @param string|array<string> $ifMatch if-match header value or values
      */
     public function withIfMatchHeader(string|array $ifMatch): static
     {
@@ -33,7 +33,7 @@ class ETagMatcher extends MatcherHeaderAbstract
     /**
      * Set If-None-Match header.
      *
-     * @param string|array $ifNoneMatch if-none-match header value or values
+     * @param string|array<string> $ifNoneMatch if-none-match header value or values
      */
     public function ifNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
@@ -44,7 +44,7 @@ class ETagMatcher extends MatcherHeaderAbstract
     /**
      * New instance with If-None-Match header.
      *
-     * @param string|array $ifNoneMatch if-none-match header value or values
+     * @param string|array<string> $ifNoneMatch if-none-match header value or values
      */
     public function withIfNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
@@ -73,6 +73,7 @@ class ETagMatcher extends MatcherHeaderAbstract
 
     /**
      * Etag header match result.
+     * @param null|string|array<string, string|array<string>> $etag
      */
     public function matches(null|string|array $etag): ETagMatcherResult
     {

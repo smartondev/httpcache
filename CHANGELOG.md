@@ -2,7 +2,7 @@
 
 ## dev
 
-
+- enh: custom DateMalFormedStringException added
 
 ## 0.5.0
 
