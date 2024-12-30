@@ -53,6 +53,12 @@ class TimeHelper
         if ($input instanceof DateTime) {
             return $input->getTimestamp();
         }
+        if (!is_string($input)) {
+            throw new \LogicException('Input must be int, string or DateTime object');
+        }
+        if (trim($input) === '') {
+            throw new DateMalformedStringException('Empty string');
+        }
         try {
             $input = new DateTime($input);
         } catch (\Exception $e) {
