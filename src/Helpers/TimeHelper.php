@@ -8,6 +8,21 @@ use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
 
 class TimeHelper
 {
+    /**
+     * @param int $seconds
+     * @param int $minutes
+     * @param int $hours
+     * @param int $days
+     * @param int $weeks
+     * @param int $months calculated as 30 days
+     * @param int $years calculated as 365 days
+     * @return int calculated seconds
+     *
+     * @example TimeHelper::durationToSeconds(37) // 37 seconds
+     * @example TimeHelper::durationToSeconds(hours: 1) // 1 hour
+     * @example TimeHelper::durationToSeconds(minutes: 30) // 30 minutes
+     * @example TimeHelper::durationToSeconds(seconds: 13, minutes: 2, hours: 1) // 1 hour, 2 minutes, 13 seconds
+     */
     public static function durationToSeconds(int $seconds = 0,
                                              int $minutes = 0,
                                              int $hours = 0,
