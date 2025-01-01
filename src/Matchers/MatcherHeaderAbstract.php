@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace SmartonDev\HttpCache\Matchers;
 
 use SmartonDev\HttpCache\Helpers\HttpHeaderHelper;
@@ -10,10 +11,12 @@ class MatcherHeaderAbstract
     /**
      * @var array<string, string|array<string>>
      */
-    protected array $headers = [];
+    private array $headers = [];
 
     /**
      * @param array<string, string|array<string>> $headers
+     *
+     * @note header names are converted to lowercase
      */
     public function headers(array $headers): static
     {
@@ -23,6 +26,8 @@ class MatcherHeaderAbstract
 
     /**
      * @param array<string, string|array<string>> $headers
+     *
+     * @note header names are converted to lowercase
      */
     public function withHeaders(array $headers): static
     {
@@ -38,5 +43,13 @@ class MatcherHeaderAbstract
     public function withoutHeaders(): static
     {
         return (clone $this)->resetHeaders();
+    }
+
+    /**
+     * @return array<string, string|array<string>>
+     */
+    protected function getHeaders(): array
+    {
+        return $this->headers;
     }
 }

@@ -17,8 +17,9 @@ class ETagMatcher extends MatcherHeaderAbstract
      */
     public function ifMatchHeader(string|array $ifMatch): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MATCH_HEADER => $ifMatch]);
-        return $this;
+        return $this->headers(
+            HttpHeaderHelper::replaceHeaders($this->getHeaders(), [self::IF_MATCH_HEADER => $ifMatch])
+        );
     }
 
     /**
@@ -38,8 +39,9 @@ class ETagMatcher extends MatcherHeaderAbstract
      */
     public function ifNoneMatchHeaderValue(string|array $ifNoneMatch): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_NONE_MATCH_HEADER => $ifNoneMatch]);
-        return $this;
+        return $this->headers(
+            HttpHeaderHelper::replaceHeaders($this->getHeaders(), [self::IF_NONE_MATCH_HEADER => $ifNoneMatch])
+        );
     }
 
     /**
@@ -54,7 +56,7 @@ class ETagMatcher extends MatcherHeaderAbstract
 
     public function getIfNoneMatchHeader(): ?string
     {
-        return HttpHeaderHelper::getFirstHeaderValue($this->headers, self::IF_NONE_MATCH_HEADER);
+        return HttpHeaderHelper::getFirstHeaderValue($this->getHeaders(), self::IF_NONE_MATCH_HEADER);
     }
 
     public function hasIfNoneMatchHeader(): bool
@@ -64,7 +66,7 @@ class ETagMatcher extends MatcherHeaderAbstract
 
     public function getIfMatchHeader(): ?string
     {
-        return HttpHeaderHelper::getFirstHeaderValue($this->headers, self::IF_MATCH_HEADER);
+        return HttpHeaderHelper::getFirstHeaderValue($this->getHeaders(), self::IF_MATCH_HEADER);
     }
 
     public function hasIfMatchHeader(): bool
