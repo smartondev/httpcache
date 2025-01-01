@@ -46,6 +46,8 @@ class HttpHeaderHelper
      * @param array<string, string|array<string>> $headers
      * @param array<string, string|array<string>> $replaceHeaders
      * @return array<string, string|array<string>>
+     *
+     * @note header names are converted to lowercase
      */
     public static function replaceHeaders(array $headers, array $replaceHeaders): array
     {
