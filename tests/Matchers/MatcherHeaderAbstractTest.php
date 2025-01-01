@@ -47,7 +47,7 @@ it('reset headers', function(array $input) {
 
 it('with headers', function(array $input, array $add, array $expected) {
     $headersMock = Mockery::mock(MatcherHeaderAbstract::class)->makePartial();
-    $headersMock->headers($input);
+    $headersMock->headers(['previous' => 'header']);
     $headersMock = $headersMock->withHeaders($add);
 
     $headersMock->shouldAllowMockingProtectedMethods();
