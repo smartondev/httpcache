@@ -89,7 +89,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
             return null;
         }
         if (!$this->isValidIfModifiedSinceHeader()) {
-            throw new \RuntimeException('Invalid If-Modified-Since header value');
+            throw new DateMalformedStringException('Invalid If-Modified-Since header value');
         }
         $time = $this->getIfModifiedSinceHeader();
         if (null === $time) {
@@ -117,7 +117,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
             return null;
         }
         if (!$this->isValidIfUnmodifiedSinceHeader()) {
-            throw new \RuntimeException('Invalid If-Unmodified-Since header value');
+            throw new DateMalformedStringException('Invalid If-Unmodified-Since header value');
         }
         $time = $this->getIfUnmodifiedSinceHeader();
         if (null === $time) {
