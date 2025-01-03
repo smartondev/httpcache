@@ -12,7 +12,7 @@ on:
       - 'doc/**'
 
 jobs:
-  phpunit:
+  coverage:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,8 +31,8 @@ jobs:
       - name: Configure Xdebug
         run: echo "xdebug.mode=coverage" >> $GITHUB_ENV
 
-      - name: Run PHPUnit
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+      - name: Run PHP Pest tests
+        run: vendor/bin/pest --coverage-clover=coverage.xml
 
       - name: Send coverage to Coveralls
         uses: coverallsapp/github-action@v2
