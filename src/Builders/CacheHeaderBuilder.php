@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace SmartonDev\HttpCache\Builders;
 
 use Datetime;
@@ -829,10 +830,13 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
     {
         $this->resetIfNoCache();
         if ($etag instanceof ETagHeaderBuilder) {
-            $etag = $etag->getETag();
+            $etag = (string) $etag;
         }
         if (is_string($etag) && trim($etag) === '') {
-            $etag = null;
+            return $this->resetETag();
+        }
+        if(1 !== preg_match('!^(?:W/)?".+"$!', $etag)) {
+            throw new \InvalidArgumentException('ETag must be a quoted string with optional weak indicator');
         }
         $this->etag = $etag;
         return $this;
@@ -951,7 +955,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
         }
 
         if ($this->hasETag()) {
-            if(null === $this->etag) {
+            if (null === $this->etag) {
                 throw new \LogicException('ETag is empty');
             }
             $headers[ETagHeaderBuilder::ETAG_HEADER] = $this->etag;
