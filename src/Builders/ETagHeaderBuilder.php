@@ -121,10 +121,10 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
         if ($this->isEmpty()) {
             return [];
         }
-        $etag = $this->getETag();
-        if(null === $etag) {
-            throw new \LogicException('ETag is empty');
-        }
+        $etag = $this->getETag()
+            // @codeCoverageIgnoreStart
+            ?? throw new \LogicException('ETag is empty');
+            // @codeCoverageIgnoreEnd
         return [
             self::ETAG_HEADER => $etag,
         ];
