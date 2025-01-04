@@ -824,7 +824,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
      * If ETAG is empty, it will be reset.
      *
      * @param string|ETagHeaderBuilder $etag
-     * @return $this
+     * @return static
      */
     public function etag(string|ETagHeaderBuilder $etag): static
     {
@@ -832,7 +832,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
         if ($etag instanceof ETagHeaderBuilder) {
             $etag = (string) $etag;
         }
-        if (is_string($etag) && trim($etag) === '') {
+        if (trim($etag) === '') {
             return $this->resetETag();
         }
         if(1 !== preg_match('!^(?:W/)?".+"$!', $etag)) {
@@ -848,7 +848,7 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
      * If ETAG is empty, it will be reset.
      *
      * @param string|ETagHeaderBuilder $etag
-     * @return $this
+     * @return static
      */
     public function withETag(string|ETagHeaderBuilder $etag): static
     {
