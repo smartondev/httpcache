@@ -16,17 +16,18 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
     /**
      * Set ETag header
      *
-     * If $etag is empty, it will be set to null
+     * @note If $etag is empty, it will be set to null
+     * @note If $etag is null, weekETag will be set to false and $isWeek will be ignored
      */
     public function etag(null|string $etag, bool $isWeek = false): static
     {
-        if(null === $etag) {
-            return $this->weekETag(false);
-        }
-        if (trim($etag) === '') {
+        if (is_string($etag) && trim($etag) === '') {
             $etag = null;
         }
         $this->etag = $etag;
+        if(null === $etag) {
+            return $this->weekETag(false);
+        }
         return $this->weekETag($isWeek);
     }
 

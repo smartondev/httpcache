@@ -3,6 +3,7 @@
 ## dev
 
 - enh: custom DateMalFormedStringException added
+- fix: ETagHeaderBuilder#etag() etag set and already set with null -> null etag not stored 
 
 ## 0.5.0
 
