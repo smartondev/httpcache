@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace SmartonDev\HttpCache\Matchers;
 
 use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
@@ -91,10 +92,10 @@ class ModifiedMatcher extends MatcherHeaderAbstract
         if (!$this->isValidIfModifiedSinceHeader()) {
             throw new DateMalformedStringException('Invalid If-Modified-Since header value');
         }
-        $time = $this->getIfModifiedSinceHeader();
-        if (null === $time) {
-            throw new \LogicException('If-Modified-Since header is empty');
-        }
+        $time = $this->getIfModifiedSinceHeader()
+            // @codeCoverageIgnoreStart
+            ?? throw new \LogicException('If-Modified-Since header is empty');
+            // @codeCoverageIgnoreEnd
         return TimeHelper::toTimestamp($time);
     }
 
@@ -119,10 +120,10 @@ class ModifiedMatcher extends MatcherHeaderAbstract
         if (!$this->isValidIfUnmodifiedSinceHeader()) {
             throw new DateMalformedStringException('Invalid If-Unmodified-Since header value');
         }
-        $time = $this->getIfUnmodifiedSinceHeader();
-        if (null === $time) {
-            throw new \LogicException('If-Unmodified-Since header is empty');
-        }
+        $time = $this->getIfUnmodifiedSinceHeader()
+            // @codeCoverageIgnoreStart
+            ?? throw new \LogicException('If-Unmodified-Since header is empty');
+            // @codeCoverageIgnoreEnd
         return TimeHelper::toTimestamp($time);
     }
 
