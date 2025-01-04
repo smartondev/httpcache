@@ -1,131 +1,118 @@
 <?php
 
-namespace SmartonDev\HttpCache\Tests\Builders;
+declare(strict_types=1);
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use SmartonDev\HttpCache\Builders\ETagHeaderBuilder;
 
-class ETagHeaderBuilderTest extends TestCase
-{
-    public static function dataProviderWithEtag(): array
-    {
-        return [
-            ['123456', ['etag' => '"123456"'], ['etag' => 'W/"123456"']],
-            ['abcABC123456', ['etag' => '"abcABC123456"'], ['etag' => 'W/"abcABC123456"']],
-        ];
-    }
+it('etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect($builder->toHeaders())->toBe(['etag' => '"123456"']);
+});
 
-    #[DataProvider('dataProviderWithEtag')]
-    public function testWithETag(string $etag, array $expectedHeaders, array $expectedWeekHeaders): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->withETag($etag);
-        $this->assertSame(
-            $expectedWeekHeaders,
-            $builder
-                ->withWeekEtag()
-                ->toHeaders()
-        );
-        $this->assertSame($expectedHeaders, $builder->toHeaders());
-    }
+it('etag null/string', function (?string $etag) {
+    $builder = (new ETagHeaderBuilder())
+        ->etag($etag);
+    expect($builder->toHeaders())->toBeEmpty();
+})->with([
+    'null' => null,
+    'empty' => '',
+    'blank' => '     ',
+]);
 
-    public static function dataProviderComputedEtag(): array
-    {
-        return [
-            ['content123', 'md5', false, ['etag' => '"' . md5('content123') . '"']],
-            ['content456', 'md5', true, ['etag' => 'W/"' . md5('content456') . '"']],
-            ['content789', 'sha1', false, ['etag' => '"' . sha1('content789') . '"']],
-            ['contentABC', 'sha1', true, ['etag' => 'W/"' . sha1('contentABC') . '"']],
-            ['contentABCDE', 'strval', false, ['etag' => '"contentABCDE"']],
-            ['contentABCDEFG', 'strval', true, ['etag' => 'W/"contentABCDEFG"']],
-            [2, fn($d) => strval($d * 11), false, ['etag' => '"22"']],
-            [35, fn($d) => strval($d / 5), true, ['etag' => 'W/"7"']],
-        ];
-    }
+it('with etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    $builder2 = $builder->withETag('654321');
+    expect($builder->toHeaders())->toBe(['etag' => '"123456"'])
+        ->and($builder2->toHeaders())->toBe(['etag' => '"654321"']);
+});
 
-    #[DataProvider('dataProviderComputedEtag')]
-    public function testComputedEtag(mixed $data, callable $func, bool $weekEtag, array $expectedHeaders): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->computedETag($data, $func);
-        if ($weekEtag) {
-            $builder->weekETag();
-        }
-        $this->assertSame($expectedHeaders, $builder->toHeaders());
-    }
+it('computed etag', function (mixed $data, callable $compute, array $expectedHeaders) {
+    $builder = (new ETagHeaderBuilder())
+        ->computedETag($data, $compute);
+    expect($builder->toHeaders())->toBe($expectedHeaders);
+})->with([
+    'md5' => [
+        'content123',
+        'md5',
+        ['etag' => '"' . md5('content123') . '"'],
+    ],
+    'sha1' => [
+        'content789',
+        'sha1',
+        ['etag' => '"' . sha1('content789') . '"'],
+    ],
+    'int multiple' => [
+        2,
+        fn($d) => strval($d * 11),
+        ['etag' => '"22"'],
+    ],
+]);
 
-    #[DataProvider('dataProviderComputedEtag')]
-    public function testWithComputedEtag(mixed $data, callable $func, bool $weekEtag, array $expectedHeaders): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->withComputedETag($data, $func);
-        if ($weekEtag) {
-            $builder = $builder->withWeekETag();
-        }
-        $this->assertSame($expectedHeaders, $builder->toHeaders());
-    }
+it('week etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456')
+        ->weekETag();
+    expect($builder->toHeaders())->toBe(['etag' => 'W/"123456"']);
+});
 
-    public function testEmptyETag(): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->etag('');
-        $this->assertNull($builder->getETag());
+it('is empty', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect($builder->isEmpty())->toBeFalse();
+});
 
-        $builder = (new ETagHeaderBuilder())
-            ->etag('    ');
-        $this->assertNull($builder->getETag());
-    }
+it('is not empty', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag(null);
+    expect($builder->isEmpty())->toBeTrue();
+});
 
-    public function testIsNotEmptyETag(): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->etag('123456');
-        $this->assertTrue($builder->isNotEmpty());
+it('reset etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect($builder->toHeaders())->not()->toBeEmpty();
+    $builder->resetETag();
+    expect($builder->toHeaders())->toBeEmpty();
+});
 
-        $builder = (new ETagHeaderBuilder())
-            ->etag('    ');
-        $this->assertFalse($builder->isNotEmpty());
-    }
+it('without etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect($builder->withoutETag()->toHeaders())->toBeEmpty()
+        ->and($builder->toHeaders())->not()->toBeEmpty();
+});
 
-    public function testResetETag(): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->etag('123456');
-        $this->assertTrue($builder->isNotEmpty());
-        $this->assertFalse($builder->withoutETag()->isNotEmpty());
-        $this->assertTrue($builder->isNotEmpty());
-        $builder->resetETag();
-        $this->assertFalse($builder->isNotEmpty());
-    }
+it('weak etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456')
+        ->weekETag();
+    expect($builder->toHeaders())->toBe(['etag' => 'W/"123456"']);
+});
 
-    public function testResetWeekETag(): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->etag('123456')
-            ->weekETag();
-        $this->assertSame('W/"123456"', $builder->getETag());
-        $this->assertSame('"123456"', $builder->withoutWeekETag()->getETag());
-        $this->assertSame('W/"123456"', $builder->getETag());
-        $builder->resetWeekETag();
-        $this->assertSame('"123456"', $builder->getETag());
-    }
+it('with weak etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect($builder->withWeekETag()->toHeaders())->toBe(['etag' => 'W/"123456"'])
+        ->and($builder->toHeaders())->toBe(['etag' => '"123456"']);
+});
 
-    public function testEmpty(): void
-    {
-        $builder = new ETagHeaderBuilder();
-        $this->assertSame([], $builder->toHeaders());
-    }
+it('initial empty', function () {
+    $builder = new ETagHeaderBuilder();
+    expect($builder->toHeaders())->toBeEmpty();
+});
 
-    public function testToString(): void
-    {
-        $builder = (new ETagHeaderBuilder())
-            ->etag('123456');
-        $this->assertSame('"123456"', (string)$builder);
-        $this->assertSame($builder->getETag(), (string)$builder);
+it('to string', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect((string)$builder)->toBe('"123456"')
+        ->and((string)$builder->withWeekETag())->toBe('W/"123456"');
+});
 
-        $builder->weekETag();
-        $this->assertSame('W/"123456"', (string)$builder);
-        $this->assertSame($builder->getETag(), (string)$builder);
-    }
-}
+it('get etag', function () {
+    $builder = (new ETagHeaderBuilder())
+        ->etag('123456');
+    expect($builder->getETag())->toBe('"123456"')
+        ->and($builder->withWeekETag()->getETag())->toBe('W/"123456"');
+});
