@@ -955,10 +955,10 @@ class CacheHeaderBuilder implements HttpHeaderBuilderInterface
         }
 
         if ($this->hasETag()) {
-            if (null === $this->etag) {
+            $headers[ETagHeaderBuilder::ETAG_HEADER] = $this->etag ??
+                // @codeCoverageIgnoreStart
                 throw new \LogicException('ETag is empty');
-            }
-            $headers[ETagHeaderBuilder::ETAG_HEADER] = $this->etag;
+                // @codeCoverageIgnoreEnd
         }
 
         return $headers;
