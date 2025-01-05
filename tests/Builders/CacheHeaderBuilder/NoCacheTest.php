@@ -38,3 +38,26 @@ it('is no cache', function () {
     expect($builder->isNoCache())->toBeTrue()
         ->and($builder->withSharedMaxAge(60)->isNoCache())->toBeFalse();
 });
+
+it('is no cache multiple stage', function() {
+    $builder = (new CacheHeaderBuilder());
+    expect($builder->isNoCache())->toBeFalse();
+    $builder->noCache();
+    expect($builder->isNoCache())->toBeTrue();
+    $builder->reset();
+    expect($builder->isNoCache())->toBeFalse();
+
+    $builder->noCache();
+    $builder->public();
+    expect($builder->isNoCache())->toBeFalse();
+});
+
+it('no cache reset', function () {
+    $builder = (new CacheHeaderBuilder())
+        ->noCache();
+    expect($builder->withReset()->toHeaders())->toBeEmpty()
+        ->and($builder->withPrivate()->toHeaders())->toBe(['cache-control' => 'private'])
+        ->and($builder->withPublic()->toHeaders())->toBe(['cache-control' => 'public'])
+        ->and($builder->withNoStore()->toHeaders())->toBe(['cache-control' => 'no-store'])
+        ->and($builder->withMustRevalidate()->toHeaders())->toBe(['cache-control' => 'must-revalidate']);
+});
