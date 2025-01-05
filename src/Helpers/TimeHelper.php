@@ -61,8 +61,7 @@ class TimeHelper
         } catch (\Exception $e) {
             // before php8.3 \DateMalformedStringException is not available
             throw new DateMalformedStringException(
-                message: $e->getMessage(),
-                code: $e->getCode(),
+                message: 'Malformed date string',
                 previous: $e,
             );
         }
