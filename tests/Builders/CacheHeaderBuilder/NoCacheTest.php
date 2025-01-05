@@ -31,3 +31,10 @@ it('with no cache', function () {
         ->and($builder->toHeaders()['cache-control'])->not()->toContain('no-cache')
         ->and($builderNoCache->toHeaders())->not()->toBe($builder->toHeaders());
 });
+
+it('is no cache', function () {
+    $builder = (new CacheHeaderBuilder())
+        ->noCache();
+    expect($builder->isNoCache())->toBeTrue()
+        ->and($builder->withSharedMaxAge(60)->isNoCache())->toBeFalse();
+});

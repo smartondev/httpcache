@@ -69,3 +69,17 @@ it('with etag with builder', function () {
     expect($builder->withEtag($etag)->toHeaders())->toBe(['etag' => '"123"'])
         ->and($builder->withEtag($etag->weekETag())->toHeaders())->toBe(['etag' => 'W/"123"']);
 });
+
+it('has etag', function () {
+    $builder = (new CacheHeaderBuilder())
+        ->etag('"123"');
+    expect($builder->hasEtag())->toBeTrue()
+        ->and($builder->withoutEtag()->hasEtag())->toBeFalse();
+});
+
+it('get etag', function () {
+    $builder = (new CacheHeaderBuilder())
+        ->etag('"123"');
+    expect($builder->getEtag())->toBe('"123"')
+        ->and($builder->withoutEtag()->getEtag())->toBeNull();
+});
