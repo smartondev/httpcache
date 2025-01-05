@@ -12,6 +12,8 @@ it('etag', function (string $etag, array $expectedHeaders) {
 })->with([
     'strong' => ['"123"', ['etag' => '"123"']],
     'weak' => ['W/"123"', ['etag' => 'W/"123"']],
+    'empty etag' => ['', []],
+    'blank etag' => ['     ', []],
 ]);
 
 it('with etag', function (string $etag, array $expectedHeaders) {
@@ -21,6 +23,8 @@ it('with etag', function (string $etag, array $expectedHeaders) {
 })->with([
     'strong' => ['"123"', ['etag' => '"123"']],
     'weak' => ['W/"123"', ['etag' => 'W/"123"']],
+    'empty etag' => ['', []],
+    'blank etag' => ['     ', []],
 ]);
 
 it('reset etag', function () {
