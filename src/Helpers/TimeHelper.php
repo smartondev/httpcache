@@ -54,7 +54,7 @@ class TimeHelper
             return $input->getTimestamp();
         }
         if (trim($input) === '') {
-            throw new DateMalformedStringException('Empty string');
+            throw new \InvalidArgumentException('Date string is empty');
         }
         try {
             $input = new DateTime($input);
