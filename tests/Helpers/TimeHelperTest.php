@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use SmartonDev\HttpCache\Helpers\TimeHelper;
+use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
 
 it('duration to seconds', function () {
     expect(TimeHelper::durationToSeconds(37))
@@ -35,11 +36,13 @@ it('to timestamp', function (int|DateTime|string $input, int $expected) {
     'date time object' => [new DateTime('2021-10-12T08:00:00Z'), 1634025600]
 ]);
 
-it('to timestamp malformed string', function (string $input) {
-    TimeHelper::toTimestamp($input);
-})->throws(\SmartonDev\HttpCache\Exceptions\DateMalformedStringException::class)
-    ->with([
-        'malformed string' => ['malformed string'],
-        'empty' => [''],
-        'empty spaces' => ['  ']
-    ]);
+it('to timestamp malformed string', function (string $input, string $expectedExceptionClass, string $expectedExceptionMessage) {
+    expect(fn() => TimeHelper::toTimestamp($input))->toThrow(
+        exception: $expectedExceptionClass,
+        exceptionMessage: $expectedExceptionMessage
+    );
+})->with([
+    'malformed string' => ['malformed string', DateMalformedStringException::class, 'Malformed date string'],
+    'empty' => ['', \InvalidArgumentException::class, 'Date string is empty'],
+    'blank' => ['  ', \InvalidArgumentException::class, 'Date string is empty']
+]);
