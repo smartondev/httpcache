@@ -82,3 +82,41 @@ it('with reset', function (CacheHeaderBuilder $builder) {
     'max age' => [(new CacheHeaderBuilder())->withMaxAge(3600)],
     'last modified' => [(new CacheHeaderBuilder())->withLastModified(1)],
 ]);
+
+it('mixed', function (CacheHeaderBuilder $builder, array $expectedHeaders) {
+    foreach ($builder->toHeaders() as $name => $value) {
+        expect($expectedHeaders[$name])
+            ->toEqualCanonicalizing(preg_split('!\s*,\s*!', $value));
+    }
+})->with([
+    'public maxage=3600' => [
+        (new CacheHeaderBuilder())
+            ->withPublic()
+            ->withMaxAge(3600),
+        ['cache-control' => ['public', 'max-age=3600']],
+    ],
+    'public notransform smaxage=100 maxage=200' => [
+        (new CacheHeaderBuilder())
+            ->withPublic()
+            ->withNoTransform()
+            ->withSharedMaxAge(100)
+            ->withMaxAge(200),
+        ['cache-control' => ['public', 'no-transform', 's-maxage=100', 'max-age=200']],
+    ],
+    'mustrevalidate nostore' => [
+        (new CacheHeaderBuilder())
+            ->withMustRevalidate()
+            ->withNoStore(),
+        ['cache-control' => ['must-revalidate', 'no-store']],
+    ],
+    'public notransform smaxage=100 maxage=200 stalewhile=300 staleiferror=400' => [
+        (new CacheHeaderBuilder())
+            ->withPublic()
+            ->withNoTransform()
+            ->withSharedMaxAge(100)
+            ->withMaxAge(200)
+            ->withStaleWhileRevalidate(300)
+            ->withStaleIfError(400),
+        ['cache-control' => ['public', 'no-transform', 's-maxage=100', 'max-age=200', 'stale-while-revalidate=300', 'stale-if-error=400']],
+    ],
+]);
