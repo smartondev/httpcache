@@ -15,7 +15,7 @@ class ETagMatcher extends MatcherHeaderAbstract
      *
      * @param string|array<string> $ifMatch if-match header value or values
      */
-    public function ifMatchHeader(string|array $ifMatch): static
+    public function ifMatchHeaderValue(string|array $ifMatch): static
     {
         return $this->headers(
             HttpHeaderHelper::replaceHeaders($this->getHeaders(), [self::IF_MATCH_HEADER => $ifMatch])
@@ -27,9 +27,9 @@ class ETagMatcher extends MatcherHeaderAbstract
      *
      * @param string|array<string> $ifMatch if-match header value or values
      */
-    public function withIfMatchHeader(string|array $ifMatch): static
+    public function withIfMatchHeaderValue(string|array $ifMatch): static
     {
-        return (clone $this)->ifMatchHeader($ifMatch);
+        return (clone $this)->ifMatchHeaderValue($ifMatch);
     }
 
     /**

@@ -4,6 +4,8 @@
 
 - enh: custom DateMalFormedStringException added
 - fix: ETagHeaderBuilder#etag() etag set and already set with null -> null etag not stored 
+- rename: ETagMatcher#ifMatchHeader() -> ETagMatcher#ifMatchHeaderValue()
+- rename: ETagMatcher#withIfMatchHeader() -> ETagMatcher#withIfMatchHeaderValue()
 
 ## 0.5.0
 
