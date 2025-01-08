@@ -126,7 +126,7 @@ it('if has none match header', function (array $headers, bool $expected) {
     ],
 ]);
 
-it('if match header', function (string $ifMatchHeader, ?string $etag, bool $expected) {
+it('if match header value', function (string $ifMatchHeader, ?string $etag, bool $expected) {
     $matcher = (new ETagMatcher())
         ->ifMatchHeaderValue($ifMatchHeader);
     expect($matcher->matches($etag)->matchesIfMatchHeader())->toBe($expected)
@@ -144,9 +144,45 @@ it('if match header', function (string $ifMatchHeader, ?string $etag, bool $expe
     ],
 ]);
 
-it('if none match header', function (string $ifNoneMatchHeader, ?string $etag, bool $expected) {
+it('with if match header value', function (string $ifMatchHeader, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->withIfMatchHeaderValue($ifMatchHeader);
+    expect($matcher->matches($etag)->matchesIfMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        '"123"',
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        '"123"',
+        '"456"',
+        false,
+    ],
+]);
+
+it('if none match header value', function (string $ifNoneMatchHeader, ?string $etag, bool $expected) {
     $matcher = (new ETagMatcher())
         ->ifNoneMatchHeaderValue($ifNoneMatchHeader);
+    expect($matcher->matches($etag)->matchesIfNoneMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfNoneMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        '"123"',
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        '"123"',
+        '"456"',
+        false,
+    ],
+]);
+
+it('with if none match header value', function (string $ifNoneMatchHeader, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->withIfNoneMatchHeaderValue($ifNoneMatchHeader);
     expect($matcher->matches($etag)->matchesIfNoneMatchHeader())->toBe($expected)
         ->and($matcher->matches($etag)->notMatchesIfNoneMatchHeader())->toBe(!$expected);
 })->with([
