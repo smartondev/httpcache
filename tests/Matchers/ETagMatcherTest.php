@@ -1,112 +1,199 @@
 <?php
 
-namespace SmartonDev\HttpCache\Tests\Matchers;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
-use SmartonDev\HttpCache\Builders\ETagHeaderBuilder;
 use SmartonDev\HttpCache\Matchers\ETagMatcher;
 
-class ETagMatcherTest extends TestCase
-{
-    public function testIsMatch(): void
-    {
-        $ETagCondition = (new ETagMatcher())
-            ->headers(['If-Match' => '"123456"']);
-        $this->assertTrue(
-            $ETagCondition
-                ->matches('"123456"')
-                ->matchesIfMatchHeader()
-        );
-    }
+it('if match header matches', function (array $headers, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->headers($headers);
+    expect($matcher->matches($etag)->matchesIfMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        ['If-Match' => '"123"'],
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        ['If-Match' => '"123"'],
+        '"456"',
+        false,
+    ],
+    'not match empty' => [
+        [],
+        '"123"',
+        false,
+    ],
+    'another header' => [
+        ['x-foo' => '"123"'],
+        '"123"',
+        false,
+    ],
+    'null' => [
+        ['If-Match' => '"123"'],
+        null,
+        false,
+    ],
+    'null empty headers' => [
+        [],
+        null,
+        false,
+    ],
+]);
 
-    public function testIsNoneMatch(): void
-    {
-        $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-None-Match' => '"123456"']);
-        $this->assertTrue(
-            $ETagCondition
-                ->matches('"123456"')
-                ->matchesIfNoneMatchHeader()
-        );
-    }
+it('if none match header matches', function (array $headers, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->headers($headers);
+    expect($matcher->matches($etag)->matchesIfNoneMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfNoneMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        ['If-None-Match' => '"123"'],
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        ['If-None-Match' => '"123"'],
+        '"456"',
+        false,
+    ],
+    'not match empty' => [
+        [],
+        '"123"',
+        false,
+    ],
+    'another header' => [
+        ['x-foo' => '"123"'],
+        '"123"',
+        false,
+    ],
+    'null' => [
+        ['If-None-Match' => '"123"'],
+        null,
+        false,
+    ],
+    'null empty headers' => [
+        [],
+        null,
+        false,
+    ],
+]);
 
-    public function testIsMatchWithNullEtag(): void
-    {
-        $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-Match' => '"123456"']);
-        $matches = $ETagCondition->matches(null);
-        $this->assertFalse($matches->matchesIfMatchHeader());
-        $this->assertTrue($matches->notMatchesIfMatchHeader());
-    }
+it('has if match header', function (array $headers, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->headers($headers);
+    expect($matcher->hasIfMatchHeader())->toBe($expected);
+})->with([
+    'has' => [
+        ['If-Match' => '"123"'],
+        true,
+    ],
+    'has empty' => [
+        ['If-Match' => ''],
+        true,
+    ],
+    'empty' => [
+        [],
+        false,
+    ],
+    'another header' => [
+        ['x-foo' => '"123"'],
+        false,
+    ],
+]);
 
-    public function testIsNoneMatchWithNullEtag(): void
-    {
-        $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-None-Match' => '"123456"']);
-        $matches = $ETagCondition->matches(null);
-        $this->assertFalse($matches->matchesIfNoneMatchHeader());
-        $this->assertTrue($matches->notMatchesIfNoneMatchHeader());
-    }
+it('if has none match header', function (array $headers, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->headers($headers);
+    expect($matcher->hasIfNoneMatchHeader())->toBe($expected);
+})->with([
+    'has' => [
+        ['If-None-Match' => '"123"'],
+        true,
+    ],
+    'has empty' => [
+        ['If-None-Match' => ''],
+        true,
+    ],
+    'empty' => [
+        [],
+        false,
+    ],
+    'another header' => [
+        ['x-foo' => '"123"'],
+        false,
+    ],
+]);
 
-    public function testIsNoneMatchFail(): void
-    {
-        $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-None-Match' => '"123456"']);
-        $matches = $ETagCondition->matches('"1234567"');
-        $this->assertFalse($matches->matchesIfNoneMatchHeader());
-        $this->assertTrue($matches->notMatchesIfNoneMatchHeader());
-    }
+it('if match header value', function (string $ifMatchHeader, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->ifMatchHeaderValue($ifMatchHeader);
+    expect($matcher->matches($etag)->matchesIfMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        '"123"',
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        '"123"',
+        '"456"',
+        false,
+    ],
+]);
 
-    public function testIsMatchFail(): void
-    {
-        $ETagCondition = (new ETagMatcher())
-            ->withHeaders(['If-Match' => '"123456"']);
-        $matches = $ETagCondition->matches('"1234567"');
-        $this->assertFalse($matches->matchesIfMatchHeader());
-        $this->assertTrue($matches->notMatchesIfMatchHeader());
-    }
+it('with if match header value', function (string $ifMatchHeader, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->withIfMatchHeaderValue($ifMatchHeader);
+    expect($matcher->matches($etag)->matchesIfMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        '"123"',
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        '"123"',
+        '"456"',
+        false,
+    ],
+]);
 
-    public function testMatchWithETagHeaderBuilder(): void
-    {
-        $ETagHeaderBuilder = (new ETagHeaderBuilder())
-            ->withETag('123456')
-            ->withWeekEtag();
-        $etag = $ETagHeaderBuilder->getETag();
-        $ETagCondition = new ETagMatcher();
-        $matchesIfMatch = $ETagCondition
-            ->withHeaders(['If-Match' => $etag])
-            ->matches($etag);
-        $this->assertTrue($matchesIfMatch->matchesIfMatchHeader());
-        $this->assertFalse($matchesIfMatch->notMatchesIfMatchHeader());
+it('if none match header value', function (string $ifNoneMatchHeader, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->ifNoneMatchHeaderValue($ifNoneMatchHeader);
+    expect($matcher->matches($etag)->matchesIfNoneMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfNoneMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        '"123"',
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        '"123"',
+        '"456"',
+        false,
+    ],
+]);
 
-        $matchesIfNoneMatch = $ETagCondition
-            ->withHeaders(['If-None-Match' => $etag])
-            ->matches($etag);
-        $this->assertTrue($matchesIfNoneMatch->matchesIfNoneMatchHeader());
-        $this->assertFalse($matchesIfNoneMatch->notMatchesIfNoneMatchHeader());
-    }
-
-    public function testIfMatchHeader(): void
-    {
-        $matcher = new ETagMatcher();
-        $matcher2 = $matcher->withIfMatchHeader('"123"');
-        $this->assertFalse($matcher->hasIfMatchHeader());
-        $this->assertTrue($matcher2->hasIfMatchHeader());
-        $this->assertSame('"123"', $matcher2->getIfMatchHeader());
-        $matcher->ifMatchHeader('"456"');
-        $this->assertTrue($matcher->hasIfMatchHeader());
-        $this->assertSame('"456"', $matcher->getIfMatchHeader());
-    }
-
-    public function testIfNoneMatchHeader(): void
-    {
-        $matcher = new ETagMatcher();
-        $matcher2 = $matcher->withIfNoneMatchHeaderValue('"123"');
-        $this->assertFalse($matcher->hasIfNoneMatchHeader());
-        $this->assertTrue($matcher2->hasIfNoneMatchHeader());
-        $this->assertSame('"123"', $matcher2->getIfNoneMatchHeader());
-        $matcher->ifNoneMatchHeaderValue('"456"');
-        $this->assertTrue($matcher->hasIfNoneMatchHeader());
-        $this->assertSame('"456"', $matcher->getIfNoneMatchHeader());
-    }
-}
+it('with if none match header value', function (string $ifNoneMatchHeader, ?string $etag, bool $expected) {
+    $matcher = (new ETagMatcher())
+        ->withIfNoneMatchHeaderValue($ifNoneMatchHeader);
+    expect($matcher->matches($etag)->matchesIfNoneMatchHeader())->toBe($expected)
+        ->and($matcher->matches($etag)->notMatchesIfNoneMatchHeader())->toBe(!$expected);
+})->with([
+    'match' => [
+        '"123"',
+        '"123"',
+        true,
+    ],
+    'not match' => [
+        '"123"',
+        '"456"',
+        false,
+    ],
+]);

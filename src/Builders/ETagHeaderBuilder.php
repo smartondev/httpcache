@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 namespace SmartonDev\HttpCache\Builders;
 
 use SmartonDev\HttpCache\Contracts\HttpHeaderBuilderInterface;
@@ -15,17 +16,18 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
     /**
      * Set ETag header
      *
-     * If $etag is empty, it will be set to null
+     * @note If $etag is empty, it will be set to null
+     * @note If $etag is null, weekETag will be set to false and $isWeek will be ignored
      */
     public function etag(null|string $etag, bool $isWeek = false): static
     {
-        if(null === $etag) {
-            return $this->weekETag(false);
-        }
-        if (trim($etag) === '') {
+        if (is_string($etag) && trim($etag) === '') {
             $etag = null;
         }
         $this->etag = $etag;
+        if(null === $etag) {
+            return $this->weekETag(false);
+        }
         return $this->weekETag($isWeek);
     }
 
@@ -119,10 +121,10 @@ class ETagHeaderBuilder implements HttpHeaderBuilderInterface
         if ($this->isEmpty()) {
             return [];
         }
-        $etag = $this->getETag();
-        if(null === $etag) {
-            throw new \LogicException('ETag is empty');
-        }
+        $etag = $this->getETag()
+            // @codeCoverageIgnoreStart
+            ?? throw new \LogicException('ETag is empty');
+            // @codeCoverageIgnoreEnd
         return [
             self::ETAG_HEADER => $etag,
         ];

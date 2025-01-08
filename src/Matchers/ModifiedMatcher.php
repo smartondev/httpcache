@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SmartonDev\HttpCache\Matchers;
 
 use SmartonDev\HttpCache\Exceptions\DateMalformedStringException;
@@ -18,8 +20,9 @@ class ModifiedMatcher extends MatcherHeaderAbstract
      */
     public function ifModifiedSinceHeader(string|array $ifModifiedSinceHeaderValue): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_MODIFIED_SINCE_HEADER => $ifModifiedSinceHeaderValue]);
-        return $this;
+        return $this->headers(
+            HttpHeaderHelper::replaceHeaders($this->getHeaders(), [self::IF_MODIFIED_SINCE_HEADER => $ifModifiedSinceHeaderValue])
+        );
     }
 
     /**
@@ -39,8 +42,9 @@ class ModifiedMatcher extends MatcherHeaderAbstract
      */
     public function ifUnmodifiedSinceHeader(string|array $ifUnmodifiedSinceHeaderValue): static
     {
-        $this->headers = HttpHeaderHelper::replaceHeaders($this->headers, [self::IF_UNMODIFIED_SINCE_HEADER => $ifUnmodifiedSinceHeaderValue]);
-        return $this;
+        return $this->headers(
+            HttpHeaderHelper::replaceHeaders($this->getHeaders(), [self::IF_UNMODIFIED_SINCE_HEADER => $ifUnmodifiedSinceHeaderValue])
+        );
     }
 
     /**
@@ -55,7 +59,7 @@ class ModifiedMatcher extends MatcherHeaderAbstract
 
     public function getIfModifiedSinceHeader(): ?string
     {
-        return HttpHeaderHelper::getFirstHeaderValue($this->headers, self::IF_MODIFIED_SINCE_HEADER);
+        return HttpHeaderHelper::getFirstHeaderValue($this->getHeaders(), self::IF_MODIFIED_SINCE_HEADER);
     }
 
     public function hasIfModifiedSinceHeader(): bool
@@ -86,18 +90,18 @@ class ModifiedMatcher extends MatcherHeaderAbstract
             return null;
         }
         if (!$this->isValidIfModifiedSinceHeader()) {
-            throw new \RuntimeException('Invalid If-Modified-Since header value');
+            throw new DateMalformedStringException('Invalid If-Modified-Since header value');
         }
-        $time = $this->getIfModifiedSinceHeader();
-        if (null === $time) {
-            throw new \LogicException('If-Modified-Since header is empty');
-        }
+        $time = $this->getIfModifiedSinceHeader()
+            // @codeCoverageIgnoreStart
+            ?? throw new \LogicException('If-Modified-Since header is empty');
+            // @codeCoverageIgnoreEnd
         return TimeHelper::toTimestamp($time);
     }
 
     public function getIfUnmodifiedSinceHeader(): ?string
     {
-        return HttpHeaderHelper::getFirstHeaderValue($this->headers, self::IF_UNMODIFIED_SINCE_HEADER);
+        return HttpHeaderHelper::getFirstHeaderValue($this->getHeaders(), self::IF_UNMODIFIED_SINCE_HEADER);
     }
 
     public function hasIfUnmodifiedSinceHeader(): bool
@@ -114,12 +118,12 @@ class ModifiedMatcher extends MatcherHeaderAbstract
             return null;
         }
         if (!$this->isValidIfUnmodifiedSinceHeader()) {
-            throw new \RuntimeException('Invalid If-Unmodified-Since header value');
+            throw new DateMalformedStringException('Invalid If-Unmodified-Since header value');
         }
-        $time = $this->getIfUnmodifiedSinceHeader();
-        if (null === $time) {
-            throw new \LogicException('If-Unmodified-Since header is empty');
-        }
+        $time = $this->getIfUnmodifiedSinceHeader()
+            // @codeCoverageIgnoreStart
+            ?? throw new \LogicException('If-Unmodified-Since header is empty');
+            // @codeCoverageIgnoreEnd
         return TimeHelper::toTimestamp($time);
     }
 
