@@ -34,6 +34,11 @@ Generate a strong ETag from the content with a specific hash algorithm.
 
 ```php
 $headers = (new ETagHeaderBuilder())
+    ->computedETag($content, fn($data) => md5($data))
+    ->toHeaders();
+
+// or using a string function name (since 'md5' is callable in PHP)
+$headers = (new ETagHeaderBuilder())
     ->computedETag($content, 'md5')
     ->toHeaders();
 ```
