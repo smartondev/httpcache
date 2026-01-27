@@ -3,6 +3,21 @@
   "description": "Simple HTTP cache management library",
   "type": "library",
   "license": "Apache-2.0",
+  "keywords": [
+    "http",
+    "cache",
+    "caching",
+    "http-cache",
+    "etag",
+    "cache-control",
+    "last-modified",
+    "http-headers"
+  ],
+  "homepage": "https://github.com/smartondev/httpcache",
+  "support": {
+    "issues": "https://github.com/smartondev/httpcache/issues",
+    "source": "https://github.com/smartondev/httpcache"
+  },
   "authors": [
     {
       "name": "Márton Somogyi",
@@ -17,6 +32,8 @@
     "pestphp/pest": "^3.7",
     "mockery/mockery": "^1.6"
   },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "SmartonDev\\HttpCache\\": "src/"
@@ -26,6 +43,11 @@
     "psr-4": {
       "SmartonDev\\HttpCache\\Tests\\": "tests/"
     }
+  },
+  "scripts": {
+    "test": "pest",
+    "test:coverage": "pest --coverage",
+    "analyse": "phpstan analyse src --level=max"
   },
   "config": {
     "allow-plugins": {
