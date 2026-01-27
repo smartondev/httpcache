@@ -67,11 +67,11 @@ $builder = (new CacheHeaderBuilder())
 ```php
 use SmartonDev\HttpCache\Matchers\ETagMatcher;
 
-// ETag check
+// ETag check with If-None-Match header
 $etagMatcher = (new ETagMatcher())
     ->headers($requestHeaders);
-$activeEtag = '1234';
-if($etagMatcher->matches($activeEtag)->matches()) {
+$activeEtag = '"1234"';
+if($etagMatcher->matches($activeEtag)->matchesIfNoneMatchHeader()) {
     // 304 Not Modified
     return response(null, 304);
 }
@@ -82,11 +82,11 @@ if($etagMatcher->matches($activeEtag)->matches()) {
 ```php
 use SmartonDev\HttpCache\Matchers\ModifiedMatcher;
 
-// modified since
+// Check If-Modified-Since header
 $modifiedMatcher = (new ModifiedMatcher())
     ->headers($requestHeaders);
-if($modifiedMatcher->matches($lastModified)->matchesModifiedAt()) {
-    // 304 Not Modified
+if(!$modifiedMatcher->matches($lastModified)->isModifiedSince()) {
+    // 304 Not Modified - resource hasn't been modified
     return response(null, 304);
 }
 ```
