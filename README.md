@@ -115,6 +115,13 @@ $builderC = $builderB->withoutMaxAge();
 - [ETagMatcher](doc/etag-matcher.md): matching ETag headers like `If-Match`, `If-None-Match`
 - [ModifiedMatcher](doc/modified-matcher.md): matching modified headers like `If-Modified-Since`, `If-Unmodified-Since`
 
+### Framework guides
+
+- [Laravel guide](doc/laravel-guide.md)
+- [Slim guide](doc/slim-guide.md)
+- [Symfony guide](doc/symfony-guide.md)
+- [Vanilla PHP guide](doc/vanilla-php-guide.md)
+
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
